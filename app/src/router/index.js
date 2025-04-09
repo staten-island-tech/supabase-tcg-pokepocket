@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import PackOpening from '../views/PackOpening.vue';
+import PackOpening from '../components/PackOpening.vue';
 
 const routes = [
   {
