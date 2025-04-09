@@ -22,17 +22,6 @@ import { ref } from 'vue';
 let username = ref('')
 let password = ref('')
 
-function LogIn() {
-    console.log("i shall not jump sid gupta")
-}
-
-function SignUp() {
-    console.log("can i jump sidhgupta")
-}
-
-function 
-
-
 </script>
 
 <style scoped>
