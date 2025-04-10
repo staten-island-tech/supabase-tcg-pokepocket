@@ -1,27 +1,16 @@
+<!-- src/views/Login.vue -->
 <template>
   <div class="login-container">
     <h2>Login</h2>
     <form @submit.prevent="handleLogin">
       <div>
         <label for="email">Email:</label>
-        <input
-          type="email"
-          v-model="email"
-          id="email"
-          required
-          placeholder="Enter your email"
-        />
+        <input type="email" v-model="email" id="email" required placeholder="Enter your email" />
       </div>
 
       <div>
         <label for="password">Password:</label>
-        <input
-          type="password"
-          v-model="password"
-          id="password"
-          required
-          placeholder="Enter your password"
-        />
+        <input type="password" v-model="password" id="password" required placeholder="Enter your password" />
       </div>
 
       <div v-if="error" class="error-message">{{ error }}</div>
@@ -33,54 +22,58 @@
 </template>
 
 <script>
-import { supabase } from '../supabaseClient'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import supabase from '@/supabase';  // Import supabase client
 
 export default {
   name: 'Login',
   setup() {
-    const email = ref('')
-    const password = ref('')
-    const error = ref('')
-    const isLoading = ref(false)
-    const router = useRouter()
+    const email = ref('');
+    const password = ref('');
+    const error = ref('');
+    const isLoading = ref(false);
+    const router = useRouter();
 
     const handleLogin = async () => {
-      isLoading.value = true
-      error.value = ''
+      isLoading.value = true;
+      error.value = '';
 
       try {
-        const { user, session, error: authError } = await supabase.auth.signInWithPassword({
+        const { data, error: authError } = await supabase.auth.signInWithPassword({
           email: email.value,
           password: password.value,
-        })
+        });
 
         if (authError) {
-          error.value = authError.message
-          return
+          error.value = authError.message;
+          return;
         }
 
-        // Redirect to the main page or inventory page after login
-        router.push('/inventory')
+        // Check if the session exists and redirect to inventory page
+        if (data?.session) {
+          router.push('/inventory');
+        } else {
+          error.value = 'Failed to log in. Please try again.';
+        }
       } catch (err) {
-        error.value = 'An unexpected error occurred. Please try again.'
+        error.value = 'An unexpected error occurred. Please try again.';
       } finally {
-        isLoading.value = false
+        isLoading.value = false;
       }
-    }
+    };
 
     return {
       email,
       password,
       error,
       isLoading,
-      handleLogin
-    }
+      handleLogin,
+    };
   },
-}
+};
 </script>
 
 <style scoped>
-/* Same styling as before */
+/* Your existing styles */
 </style>

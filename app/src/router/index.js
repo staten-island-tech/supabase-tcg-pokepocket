@@ -1,18 +1,24 @@
+// src/router/index.js
 import { createRouter, createWebHistory } from 'vue-router';
-import PackOpening from '../components/PackOpening.vue';
-import SignupPage from '../views/SignupPage.vue';
+import SignupPage from '../views/SignUp.vue';
+import LoginPage from '../views/Login.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'PackOpening',
-    component: PackOpening,
+    redirect: '/login',  // Redirect to login page
   },
   {
-    path: '/SignUp',
+    path: '/signup',
     name: 'SignUp',
-    component: SignupPage, 
-  }
+    component: SignupPage,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: LoginPage,
+  },
+  // Add other routes if necessary (like /about or /inventory)
 ];
 
 const router = createRouter({
