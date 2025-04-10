@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import PackOpening from '../components/PackOpening.vue';
+import HomeView from '../views/HomeView.vue';
 import SignupPage from '../views/SignupPage.vue';
 
 const routes = [
   {
     path: '/',
-    name: 'PackOpening',
-    component: PackOpening,
+    name: 'HomeView',
+    component: HomeView,
   },
   {
     path: '/SignUp',

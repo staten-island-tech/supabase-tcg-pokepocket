@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import { supabase } from '../supabaseClient'
+import { supabase } from '@/supabase.js'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
