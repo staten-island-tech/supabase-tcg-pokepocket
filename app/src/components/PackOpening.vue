@@ -13,7 +13,6 @@
   
   <script>
   import { ref } from 'vue';
-  import supabase from '../services/supabaseClient'; // Import Supabase service
   import CardFlipAnimation from './CardFlipAnimation.vue'; // Import animation component
   
   export default {

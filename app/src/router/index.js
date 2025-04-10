@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import PackOpening from '../components/PackOpening.vue';
+import SignupPage from '../views/SignupPage.vue';
 
 const routes = [
   {
@@ -7,6 +8,11 @@ const routes = [
     name: 'PackOpening',
     component: PackOpening,
   },
+  {
+    path: '/SignUp',
+    name: 'SignUp',
+    component: SignupPage, 
+  }
 ];
 
 const router = createRouter({
