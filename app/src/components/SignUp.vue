@@ -95,7 +95,7 @@ const handleSignup = async () => {
     const { data, error } = await supabase.from('accounts').insert([
       {
         username: username.value,
-        password: password.value,
+        password: password.value, // Don't forget to hash this in real-world apps
       },
     ])
   
