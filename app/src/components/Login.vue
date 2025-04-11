@@ -22,15 +22,9 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import supabase from '@/supabase';  // Import supabase client
-=======
 import { supabase } from '@/supabase.js'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
->>>>>>> 7aa9eb5b18ea9eafa84bee2ae8ec4e4cf252f221
 
 export default {
   name: 'Login',
