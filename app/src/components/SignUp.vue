@@ -17,7 +17,7 @@
         <label for="username">Username</label>
           <input
             id="username"
-            type="email"
+            type="text"
             v-model="username"
             required
           />
