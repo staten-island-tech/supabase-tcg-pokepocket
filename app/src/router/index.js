@@ -13,7 +13,6 @@ const routes = [
     name: 'Login',
     component: Login
   },
-  // Add other routes if necessary (like /about or /inventory)
 ];
 
 const router = createRouter({

@@ -72,9 +72,8 @@ const handleSignup = async () => {
     return
   }
 
-  // Sign up with the email as email
   const { user, error } = await supabase.auth.signUp({
-    email: email.value,  // Use email for authentication
+    email: email.value,  
     password: password.value,
   })
 
