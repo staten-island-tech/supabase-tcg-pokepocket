@@ -52,36 +52,52 @@ const errorMessage = ref('')
 const successMessage = ref('')
 
 const handleSignup = async () => {
-  errorMessage.value = ''
-  successMessage.value = ''
+  try {
+    errorMessage.value = ''
+    successMessage.value = ''
 
-  // Check if the username already exists
-  const { data: existingUser, error: userCheckError } = await supabase
-    .from('accounts')
-    .select('id')
-    .eq('username', username.value)  // Check if the username is already in use
-    .single()
+    // Check if the username already exists
+    const { data: existingUser, error: userCheckError } = await supabase
+      .from('accounts')
+      .select('id')
+      .eq('username', username.value)  // Check if the username is already in use
+      .single()
 
-  if (userCheckError && userCheckError.code !== 'PGRST116') {  // 'PGRST116' means no rows found
-    errorMessage.value = userCheckError.message
-    return
-  }
+    // Handle errors from the username check
+    if (userCheckError && userCheckError.code !== 'PGRST116') {  // 'PGRST116' means no rows found
+      errorMessage.value = userCheckError.message
+      return
+    }
 
-  if (existingUser) {
-    errorMessage.value = 'Username is already taken. Please choose another one.'
-    return
-  }
+    // If username already exists
+    if (existingUser) {
+      errorMessage.value = 'Username is already taken. Please choose another one.'
+      return
+    }
 
-  const { user, error } = await supabase.auth.signUp({
-    email: email.value,  
-    password: password.value,
-  })
+    // Sign up with the email and password
+    const { data, error: signupError } = await supabase.auth.signUp({
+      email: email.value,  
+      password: password.value,
+    })
 
-  if (error) {
-    errorMessage.value = error.message
-  } else {
-    // Store additional user info in the 'accounts' table
-    const { data, error: insertError } = await supabase
+    // If sign-up error occurs, handle it
+    if (signupError) {
+      errorMessage.value = signupError.message
+      return
+    }
+
+    // Access the user from the data returned by signUp
+    const user = data?.user
+
+    // If there is no user in the response (error in signup), handle it
+    if (!user) {
+      errorMessage.value = 'Sign-up failed. Please try again.'
+      return
+    }
+
+    // Insert additional user info into the 'accounts' table
+    const { data: insertData, error: insertError } = await supabase
       .from('accounts')
       .insert([
         {
@@ -91,6 +107,7 @@ const handleSignup = async () => {
         },
       ])
 
+    // Handle errors during the insertion into 'accounts'
     if (insertError) {
       errorMessage.value = insertError.message
     } else {
@@ -99,7 +116,11 @@ const handleSignup = async () => {
       username.value = ''
       password.value = ''
     }
+  } catch (err) {
+    console.error('Signup error:', err)
+    errorMessage.value = 'An unexpected error occurred'
   }
 }
+
 
 </script>
