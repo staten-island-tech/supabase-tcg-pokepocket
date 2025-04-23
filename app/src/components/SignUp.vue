@@ -45,6 +45,7 @@
 import { ref } from 'vue'
 import supabase from '@/supabase.js'
 
+const email = ref('')
 const username = ref('')
 const password = ref('')
 const errorMessage = ref('')
