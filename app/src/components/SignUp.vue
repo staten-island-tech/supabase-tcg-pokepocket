@@ -2,14 +2,25 @@
   <div class="signup-container">
     <h2>Sign Up</h2>
     <form @submit.prevent="handleSignup">
+      
       <div class="form-group">
-        <label for="username">Username (email)</label>
-        <input
-          id="username"
-          type="email"
-          v-model="username"
-          required
-        />
+        <label for="email">Email</label>
+          <input
+            id="email"
+            type="email"
+            v-model="email"
+            required
+          />
+      </div>
+
+      <div class="form-group">
+        <label for="username">Username</label>
+          <input
+            id="username"
+            type="email"
+            v-model="username"
+            required
+          />
       </div>
 
       <div class="form-group">
