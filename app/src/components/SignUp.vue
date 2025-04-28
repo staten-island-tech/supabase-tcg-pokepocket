@@ -81,7 +81,6 @@ const handleSignup = async () => {
       password: password.value,
     })
 
-    // If sign-up error occurs, handle it
     if (signupError) {
       errorMessage.value = signupError.message
       return
