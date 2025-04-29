@@ -1,117 +1,147 @@
 <template>
-  <div class="signup-container">
-    <h2>Sign Up</h2>
+  <div class="signup">
+    <h2>Create an Account</h2>
     <form @submit.prevent="handleSignup">
-      
       <div class="form-group">
-        <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            v-model="email"
-            required
-          />
+        <label for="email">Gmail</label>
+        <input
+          type="email"
+          id="email"
+          v-model="email"
+          placeholder="Enter your Gmail"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label for="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            v-model="username"
-            required
-          />
+        <input
+          type="text"
+          id="username"
+          v-model="username"
+          placeholder="Enter a username"
+          required
+          minlength="3"
+        />
       </div>
 
       <div class="form-group">
         <label for="password">Password</label>
         <input
-          id="password"
           type="password"
+          id="password"
           v-model="password"
+          placeholder="Enter your password"
           required
         />
       </div>
 
-      <button type="submit">Create Account</button>
+      <button type="submit" :disabled="loading">
+        {{ loading ? 'Signing up...' : 'Sign Up' }}
+      </button>
 
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success">{{ successMessage }}</p>
+      <div v-if="error" class="error">
+        <p>{{ error }}</p>
+      </div>
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import supabase from '@/supabase.js'
 
-const email = ref('')
-const username = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const successMessage = ref('')
+import { ref } from 'vue';
+import account from '@/supabase'; // Make sure this points to your Supabase client
 
+// Reactive variables
+const email = ref('');
+const username = ref('');
+const password = ref('');
+const error = ref(null);
+const loading = ref(false);
+
+// Signup function
 const handleSignup = async () => {
+  error.value = null;
+  loading.value = true;
+
   try {
-    errorMessage.value = ''
-    successMessage.value = ''
-
-    const { data: existingUser, error: userCheckError } = await supabase
-      .from('accounts')
-      .select('id')
-      .eq('username', username.value)
-      .single()
-
-    if (userCheckError && userCheckError.code !== 'PGRST116') {
-      errorMessage.value = userCheckError.message
-      return
-    }
-
-    if (existingUser) {
-      errorMessage.value = 'Username is already taken. Please choose another one.'
-      return
-    }
-
-    const { data, error: signupError } = await supabase.auth.signUp({
-      email: email.value,  
+    // Sign up with Supabase Auth and include `username` in metadata
+    const { data, error: authError } = await account.auth.signUp({
+      email: email.value,
       password: password.value,
-    })
+      options: {
+        data: {
+          username: username.value // This goes to `raw_user_meta_data` in your DB
+        }
+      }
+    });
 
-    if (signupError) {
-      errorMessage.value = signupError.message
-      return
+    if (authError) {
+      throw authError;
     }
 
-    const user = data?.user
-
+    const user = data?.user;
     if (!user) {
-      errorMessage.value = 'Sign-up failed. Please try again.'
-      return
+      throw new Error('Signup succeeded but no user object returned.');
     }
 
-    const { data: insertData, error: insertError } = await supabase
-      .from('accounts')
-      .insert([
-        {
-          id: user.id,
-          email: email.value,
-          username: username.value,
-        },
-      ])
-
-    if (insertError) {
-      errorMessage.value = insertError.message
-    } else {
-      successMessage.value = 'Account created successfully!'
-      email.value = ''
-      username.value = ''
-      password.value = ''
-    }
+    console.log('Signup successful, user ID:', user.id);
+    // No need to manually insert into 'accounts' — the trigger handles it
   } catch (err) {
-    console.error('Signup error:', err)
-    errorMessage.value = 'An unexpected error occurred'
+    error.value = err.message;
+  } finally {
+    loading.value = false;
   }
-}
-
+  
+};
 
 </script>
+
+<style scoped>
+.signup {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  margin-top: 16px;
+}
+</style>
