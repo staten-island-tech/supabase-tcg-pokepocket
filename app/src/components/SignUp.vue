@@ -43,6 +43,12 @@
       <div v-if="error" class="error">
         <p>{{ error }}</p>
       </div>
+
+      <p class="login-link">
+        Already have an account?
+        <router-link to="/login">Log In</router-link>
+      </p>
+
     </form>
   </div>
 </template>
@@ -92,7 +98,6 @@ const handleSignup = async () => {
   } finally {
     loading.value = false;
   }
-  
 };
 
 </script>
