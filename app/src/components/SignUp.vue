@@ -55,7 +55,7 @@
 
 <script setup>
 
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import account from '@/supabase'; // Make sure this points to your Supabase client
 
 // Reactive variables
@@ -99,6 +99,16 @@ const handleSignup = async () => {
     loading.value = false;
   }
 };
+
+onMounted(async () => {
+  const {
+    data: { session }
+  } = await account.auth.getSession();
+
+  if (session?.user) {
+    router.push('/dashboard');
+  }
+});
 
 </script>
 

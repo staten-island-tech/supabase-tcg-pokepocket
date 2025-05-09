@@ -8,7 +8,7 @@
   
   <script setup>
   // No need for any JavaScript logic here, just a static link with a button
-  </script>
+  </script> 
   
   <style scoped>
   .top-bar {
