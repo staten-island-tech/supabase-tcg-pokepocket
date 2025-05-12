@@ -5,7 +5,7 @@
   </template>
   
   <script setup>
-  import PackOpening from '@/components/PackOpening.vue'
+  import PackOpening from '@/components/PokeballAnimation.vue'
   </script>
   
   <style scoped>

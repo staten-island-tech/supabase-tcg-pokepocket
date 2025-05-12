@@ -1,13 +1,11 @@
 <template>
     <div>
-        <SignUp />  
+      <PokeballAnimation />
+      <!-- Your signup form goes here -->
     </div>
-</template>
-
-<script setup>
-import SignUp from '@/components/SignUp.vue';
-</script>
-
-<style scoped>
-
-</style>
+  </template>
+  
+  <script setup>
+  import PokeballAnimation from '@/components/PokeballAnimation.vue'
+  </script>
+  

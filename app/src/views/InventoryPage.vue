@@ -1,17 +1,14 @@
 <template>
-    <div class="inventory-container">
-      <h1>Your Inventory</h1>
-      <p>Here you will find the Pokémon cards you've collected from packs!</p>
-    </div>
-  </template>
-  
-  <script setup>
-  </script>
-  
-  <style scoped>
-  .inventory-container {
-    text-align: center;
-    margin-top: 40px;
-  }
-  </style>
-  
+  <div class="inventory-page">
+    <h2>Inventory</h2>
+    <!-- Inventory content goes here -->
+  </div>
+</template>
+
+<script setup>
+/* Any logic for the inventory page */
+</script>
+
+<style scoped>
+/* Add custom styles */
+</style>
