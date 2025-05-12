@@ -1,19 +1,17 @@
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
-    <div class="wrapper">
-      <nav>
+  <div id="app">
+    <header>
+      <nav class="nav-bar">
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/login">Login</RouterLink>
-        <RouterLink to="/signup">Sign Up</RouterLink>
         <RouterLink to="/inventory">Inventory</RouterLink>
+        <RouterLink to="/pack-opening">Pack Opening</RouterLink>
+        <RouterLink to="/signup">Sign Up / Login</RouterLink>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <RouterView />
+    <RouterView />
+  </div>
 </template>
 
 <script setup>
@@ -21,38 +19,36 @@ import { RouterLink, RouterView } from 'vue-router'
 </script>
 
 <style scoped>
+#app {
+  background-color: #add8e6; /* Light blue background for the whole page */
+  color: yellow; /* Yellow text for the whole page */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 header {
-  line-height: 1.5;
-  max-height: 100vh;
+  background-color: #add8e6; /* Light blue for the header */
+  padding: 1rem 0;
 }
 
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
+.nav-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
 }
 
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
+.nav-bar a {
+  text-decoration: none;
+  color: yellow;
+  font-weight: bold;
+  font-size: 1.2rem;
 }
 
-nav a.router-link-exact-active {
-  color: var(--color-text);
+.nav-bar a:hover {
+  text-decoration: underline;
 }
 
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
 </style>
