@@ -1,79 +1,144 @@
-<!-- src/views/Login.vue -->
 <template>
-  <div class="login-container">
-    <h2>Login</h2>
-    <form @submit.prevent="handleLogin">
-      <div>
-        <label for="email">Email:</label>
-        <input type="email" v-model="email" id="email" required placeholder="Enter your email" />
-      </div>
+    <div class="signin">
+      <h2>Log In</h2>
+      <form @submit.prevent="handleSignin">
+        <div class="form-group">
+          <label for="email">Gmail</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            placeholder="Enter your Gmail"
+            required
+          />
+        </div>
+  
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            v-model="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+  
+        <button type="submit" :disabled="loading">
+          {{ loading ? 'Signing In...' : 'Log In' }}
+        </button>
+  
+        <div v-if="error" class="error">
+          <p>{{ error }}</p>
+        </div>
+  
+        <p class="signup-link">
+          Don't have an account?
+          <router-link to="/">Sign Up</router-link>
+        </p>
+  
+      </form>
+    </div>
+  </template>
+  
 
-      <div>
-        <label for="password">Password:</label>
-        <input type="password" v-model="password" id="password" required placeholder="Enter your password" />
-      </div>
+<script setup>
+import { ref } from 'vue';
+import account from '@/supabase';
 
-      <div v-if="error" class="error-message">{{ error }}</div>
+const email = ref('');
+const password = ref('');
+const error = ref(null);
+const loading = ref(false);
 
-      <button type="submit" :disabled="isLoading">Login</button>
-    </form>
-    <p>Don't have an account? <router-link to="/signup">Sign up</router-link></p>
-  </div>
-</template>
+const handleSignin = async () => {
+  error.value = null;
+  loading.value = true;
 
-<script>
-import { supabase } from '@/supabase.js'
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+  try {
 
-export default {
-  name: 'Login',
-  setup() {
-    const email = ref('');
-    const password = ref('');
-    const error = ref('');
-    const isLoading = ref(false);
-    const router = useRouter();
+    const { data, error: authError } = await account.auth.signInWithPassword({
+      email: email.value,
+      password: password.value,
+    });
 
-    const handleLogin = async () => {
-      isLoading.value = true;
-      error.value = '';
+    if (authError) {
+      throw authError;
+    }
 
-      try {
-        const { data, error: authError } = await supabase.auth.signInWithPassword({
-          email: email.value,
-          password: password.value,
-        });
+    const user = data?.user;
+    if (!user) {
+      throw new Error('Login succeeded but no user object returned.');
+    }
 
-        if (authError) {
-          error.value = authError.message;
-          return;
-        }
+    console.log('Login successful, user ID:', user.id);
 
-        // Check if the session exists and redirect to inventory page
-        if (data?.session) {
-          router.push('/inventory');
-        } else {
-          error.value = 'Failed to log in. Please try again.';
-        }
-      } catch (err) {
-        error.value = 'An unexpected error occurred. Please try again.';
-      } finally {
-        isLoading.value = false;
-      }
-    };
 
-    return {
-      email,
-      password,
-      error,
-      isLoading,
-      handleLogin,
-    };
-  },
+  } catch (err) {
+    error.value = err.message;
+  } finally {
+    loading.value = false;
+  }
 };
+
+account.auth.onAuthStateChange((event, session) => {
+  console.log('Auth change:', event);
+  if (session) {
+    console.log('User is logged in:', session.user);
+  } else {
+    console.log('User is logged out');
+  }
+});
+
+
 </script>
 
+
 <style scoped>
-/* Your existing styles */
+.signin {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  margin-top: 16px;
+}
 </style>
