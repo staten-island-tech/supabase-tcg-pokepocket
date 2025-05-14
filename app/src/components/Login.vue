@@ -78,18 +78,10 @@ const handleSignin = async () => {
     error.value = err.message;
   } finally {
     loading.value = false;
+    router.push('/dashboard')
   }
+
 };
-
-account.auth.onAuthStateChange((event, session) => {
-  console.log('Auth change:', event);
-  if (session) {
-    console.log('User is logged in:', session.user);
-  } else {
-    console.log('User is logged out');
-  }
-});
-
 
 </script>
 
