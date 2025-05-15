@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SignupPage from '../views/SignupPage.vue';
 import Login from '../views/LoginPage.vue';
+import PackOpening from '../components/PackOpening.vue';
 
 const routes = [
   {
@@ -12,6 +13,11 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/pack-opening',
+    name: 'PackOpening',
+    component: PackOpening
   },
 ];
 
