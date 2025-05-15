@@ -62,8 +62,14 @@ const handleSignin = async () => {
     error.value = err.message;
   } finally {
     loading.value = false;
+    router.push('/dashboard')
   }
+
 };
+<<<<<<< HEAD
+=======
+
+>>>>>>> d9ff4d8fdc590e7066a487d9a24ff42336e1ff3e
 </script>
 
 <style scoped>
