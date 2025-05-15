@@ -78,10 +78,9 @@ const handleSignin = async () => {
     error.value = err.message;
   } finally {
     loading.value = false;
-    router.push('/dashboard')
   }
-
 };
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
 =======
@@ -100,6 +99,8 @@ account.auth.onAuthStateChange((event, session) => {
 
 
 >>>>>>> parent of 9fe7b9f (dfs)
+=======
+>>>>>>> parent of e258f2c (e)
 </script>
 
 
