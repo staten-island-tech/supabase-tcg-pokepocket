@@ -76,18 +76,6 @@ const handleSignin = async () => {
 
   } catch (err) {
     error.value = err.message;
-  } finally {
-    loading.value = false;
-    router.push('/dashboard')
-  }
-
-};
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-
->>>>>>> d9ff4d8fdc590e7066a487d9a24ff42336e1ff3e
-=======
 
 account.auth.onAuthStateChange((event, session) => {
   console.log('Auth change:', event);
@@ -100,6 +88,13 @@ account.auth.onAuthStateChange((event, session) => {
 
 
 >>>>>>> parent of 9fe7b9f (dfs)
+} finally {
+    loading.value = false;
+    router.push('/dashboard')
+  }
+
+};
+
 </script>
 
 

@@ -1,14 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SignupPage from '../views/SignupPage.vue';
 import Login from '../views/LoginPage.vue';
-<<<<<<< HEAD
-<<<<<<< HEAD
 import PackOpening from '../components/PackOpening.vue';
-=======
 import Dashboard from '../views/DashboardPage.vue'; 
->>>>>>> d9ff4d8fdc590e7066a487d9a24ff42336e1ff3e
-=======
->>>>>>> parent of 9fe7b9f (dfs)
 
 const routes = [
   {
@@ -21,21 +15,16 @@ const routes = [
     name: 'Login',
     component: Login,
   },
-<<<<<<< HEAD
   {
-<<<<<<< HEAD
     path: '/pack-opening',
     name: 'PackOpening',
-    component: PackOpening
+    component: PackOpening, 
   },
-=======
+  {
     path: '/Dashboard',
     name: 'DashBoard',
     component: Dashboard,
   }
->>>>>>> d9ff4d8fdc590e7066a487d9a24ff42336e1ff3e
-=======
->>>>>>> parent of 9fe7b9f (dfs)
 ];
 
 const router = createRouter({
