@@ -45,6 +45,8 @@
 <script setup>
 import { ref } from 'vue';
 import account from '@/supabase';
+import { createPinia } from 'pinia'; 
+import { useAuthStore } from '../stores/auth'
 
 const email = ref('');
 const password = ref('');
