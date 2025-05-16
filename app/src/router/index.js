@@ -1,22 +1,29 @@
-import { createRouter, createWebHistory } from 'vue-router'
-
-import HomePage from '@/views/HomePage.vue'
-import AboutPage from '@/views/AboutPage.vue'
-import SignupPage from '@/views/SignupPage.vue'
-import InventoryPage from '@/views/InventoryPage.vue'
-import PackOpeningPage from '@/views/PackOpeningPage.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import SignupPage from '../views/SignupPage.vue';
+import Login from '../views/LoginPage.vue';
+import PackOpening from '../components/PackOpening.vue';
 
 const routes = [
-  { path: '/', name: 'Home', component: HomePage },
-  { path: '/about', name: 'About', component: AboutPage },
-  { path: '/signup', name: 'Signup', component: SignupPage },
-  { path: '/inventory', name: 'Inventory', component: InventoryPage },
-  { path: '/pack-opening', name: 'PackOpening', component: PackOpeningPage }
-]
+  {
+    path: '/',
+    name: 'SignUp',
+    component: SignupPage,
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    component: Login,
+  },
+  {
+    path: '/pack-opening',
+    name: 'PackOpening',
+    component: PackOpening, 
+  },
+];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-})
+});
 
-export default router
+export default router;

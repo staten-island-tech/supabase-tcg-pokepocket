@@ -1,126 +1,162 @@
 <template>
-  <div class="signup-container">
-    <h2>Sign Up</h2>
+  <div class="signup">
+    <h2>Create an Account</h2>
     <form @submit.prevent="handleSignup">
-      
       <div class="form-group">
-        <label for="email">Email</label>
-          <input
-            id="email"
-            type="email"
-            v-model="email"
-            required
-          />
+        <label for="email">Gmail</label>
+        <input
+          type="email"
+          id="email"
+          v-model="email"
+          placeholder="Enter your Gmail"
+          required
+        />
       </div>
 
       <div class="form-group">
         <label for="username">Username</label>
-          <input
-            id="username"
-            type="text"
-            v-model="username"
-            required
-          />
+        <input
+          type="text"
+          id="username"
+          v-model="username"
+          placeholder="Enter a username"
+          required
+          minlength="3"
+        />
       </div>
 
       <div class="form-group">
         <label for="password">Password</label>
         <input
-          id="password"
           type="password"
+          id="password"
           v-model="password"
+          placeholder="Enter your password"
           required
         />
       </div>
 
-      <button type="submit">Create Account</button>
+      <button type="submit" :disabled="loading">
+        {{ loading ? 'Signing up...' : 'Sign Up' }}
+      </button>
 
-      <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-      <p v-if="successMessage" class="success">{{ successMessage }}</p>
+      <div v-if="error" class="error">
+        <p>{{ error }}</p>
+      </div>
+
+      <p class="login-link">
+        Already have an account?
+        <router-link to="/login">Log In</router-link>
+      </p>
+
     </form>
   </div>
 </template>
 
 <script setup>
-import { ref } from 'vue'
-import supabase from '@/supabase.js'
 
-const email = ref('')
-const username = ref('')
-const password = ref('')
-const errorMessage = ref('')
-const successMessage = ref('')
+import { ref, onMounted } from 'vue';
+import account from '@/supabase'; // Make sure this points to your Supabase client
 
+// Reactive variables
+const email = ref('');
+const username = ref('');
+const password = ref('');
+const error = ref(null);
+const loading = ref(false);
+
+// Signup function
 const handleSignup = async () => {
+  error.value = null;
+  loading.value = true;
+
   try {
-    errorMessage.value = ''
-    successMessage.value = ''
-
-    // Check if the username already exists
-    const { data: existingUser, error: userCheckError } = await supabase
-      .from('accounts')
-      .select('id')
-      .eq('username', username.value)  // Check if the username is already in use
-      .single()
-
-    // Handle errors from the username check
-    if (userCheckError && userCheckError.code !== 'PGRST116') {  // 'PGRST116' means no rows found
-      errorMessage.value = userCheckError.message
-      return
-    }
-
-    // If username already exists
-    if (existingUser) {
-      errorMessage.value = 'Username is already taken. Please choose another one.'
-      return
-    }
-
-    // Sign up with the email and password
-    const { data, error: signupError } = await supabase.auth.signUp({
-      email: email.value,  
+    // Sign up with Supabase Auth and include `username` in metadata
+    const { data, error: authError } = await account.auth.signUp({
+      email: email.value,
       password: password.value,
-    })
+      options: {
+        data: {
+          username: username.value // This goes to `raw_user_meta_data` in your DB
+        }
+      }
+    });
 
-    // If sign-up error occurs, handle it
-    if (signupError) {
-      errorMessage.value = signupError.message
-      return
+    if (authError) {
+      throw authError;
     }
 
-    // Access the user from the data returned by signUp
-    const user = data?.user
-
-    // If there is no user in the response (error in signup), handle it
+    const user = data?.user;
     if (!user) {
-      errorMessage.value = 'Sign-up failed. Please try again.'
-      return
+      throw new Error('Signup succeeded but no user object returned.');
     }
 
-    // Insert additional user info into the 'accounts' table
-    const { data: insertData, error: insertError } = await supabase
-      .from('accounts')
-      .insert([
-        {
-          id: user.id,  // Link this user to the 'accounts' table using the user_id
-          email: email.value,  // Store the email
-          username: username.value,  // Store the username
-        },
-      ])
-
-    // Handle errors during the insertion into 'accounts'
-    if (insertError) {
-      errorMessage.value = insertError.message
-    } else {
-      successMessage.value = 'Account created successfully!'
-      email.value = ''
-      username.value = ''
-      password.value = ''
-    }
+    console.log('Signup successful, user ID:', user.id);
+    // No need to manually insert into 'accounts' — the trigger handles it
   } catch (err) {
-    console.error('Signup error:', err)
-    errorMessage.value = 'An unexpected error occurred'
+    error.value = err.message;
+  } finally {
+    loading.value = false;
   }
-}
+};
 
+onMounted(async () => {
+  const {
+    data: { session }
+  } = await account.auth.getSession();
+
+  if (session?.user) {
+    router.push('/dashboard');
+  }
+});
 
 </script>
+
+<style scoped>
+.signup {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.form-group {
+  margin-bottom: 16px;
+}
+
+label {
+  display: block;
+  margin-bottom: 8px;
+}
+
+input {
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
+}
+
+.error {
+  color: red;
+  margin-top: 16px;
+}
+</style>
