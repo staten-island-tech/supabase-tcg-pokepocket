@@ -1,6 +1,5 @@
 <template>
     <div>
-        <TopBar />
         <Login />
     </div>
 </template>
