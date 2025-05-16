@@ -89,11 +89,12 @@ account.auth.onAuthStateChange((event, session) => {
 
 } finally {
     loading.value = false;
-    router.push('/dashboard')
   }
-
 };
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of e258f2c (e)
 </script>
 
 
