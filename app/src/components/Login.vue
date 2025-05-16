@@ -76,10 +76,6 @@ const handleSignin = async () => {
 
   } catch (err) {
     error.value = err.message;
-  } finally {
-    loading.value = false;
-  }
-};
 
 account.auth.onAuthStateChange((event, session) => {
   console.log('Auth change:', event);
@@ -90,6 +86,13 @@ account.auth.onAuthStateChange((event, session) => {
   }
 });
 
+
+} finally {
+    loading.value = false;
+    router.push('/dashboard')
+  }
+
+};
 
 </script>
 
