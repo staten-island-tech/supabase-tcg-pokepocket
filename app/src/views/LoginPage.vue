@@ -8,6 +8,7 @@
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import Login from '@/components/Login.vue';
 =======
 import Login from '@/components/LogIn.vue'
@@ -19,6 +20,9 @@ import Login from '@/components/LogIn.vue';
 =======
 import Login from '@/components/Login.vue';
 >>>>>>> parent of e258f2c (e)
+=======
+import Login from '@/components/LogIn.vue';
+>>>>>>> parent of 9fe7b9f (dfs)
 </script>
 
 <style scoped>

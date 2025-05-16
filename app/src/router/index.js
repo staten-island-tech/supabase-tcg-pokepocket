@@ -4,6 +4,7 @@ import Login from '../views/LoginPage.vue';
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 import PackOpening from '../components/PackOpening.vue';
 =======
 import Dashboard from '../views/DashboardPage.vue'; 
@@ -13,6 +14,8 @@ import Dashboard from '../views/DashboardPage.vue';
 =======
 import PackOpening from '../components/PackOpening.vue';
 >>>>>>> parent of e258f2c (e)
+=======
+>>>>>>> parent of 9fe7b9f (dfs)
 
 const routes = [
   {
@@ -25,6 +28,7 @@ const routes = [
     name: 'Login',
     component: Login
   },
+<<<<<<< HEAD
 <<<<<<< HEAD
   {
     path: '/pack-opening',
@@ -42,6 +46,8 @@ const routes = [
 >>>>>>> parent of 9fe7b9f (dfs)
 =======
 >>>>>>> parent of e258f2c (e)
+=======
+>>>>>>> parent of 9fe7b9f (dfs)
 ];
 
 const router = createRouter({
