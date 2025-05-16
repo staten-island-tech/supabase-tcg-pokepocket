@@ -87,7 +87,6 @@ account.auth.onAuthStateChange((event, session) => {
 });
 
 
->>>>>>> parent of 9fe7b9f (dfs)
 } finally {
     loading.value = false;
     router.push('/dashboard')
