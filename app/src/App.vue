@@ -1,5 +1,15 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+
+//  
+onMounted(async () => {
+  const { data } = await account.auth.getUser()
+  if (data?.user) {
+    authStore.setUser(data.user)
+    // router.push whatever
+  }
+})
+
 </script>
 
 <template>
