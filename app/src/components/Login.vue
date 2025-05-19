@@ -77,23 +77,23 @@ const handleSignin = async () => {
 
     console.log('Login successful, user ID:', user.id);
 
+    authStore.setUser(user)
+
+    account.auth.onAuthStateChange((event, session) => {
+      console.log('Auth change:', event);
+      if (session) {
+        console.log('User is logged in:', session.user);
+      } else {
+        console.log('User is logged out');
+      }
+    });
+
+    router.push('/dashboard')
 
   } catch (err) {
     error.value = err.message;
-
-account.auth.onAuthStateChange((event, session) => {
-  console.log('Auth change:', event);
-  if (session) {
-    console.log('User is logged in:', session.user);
-  } else {
-    console.log('User is logged out');
-  }
-});
-
-
-} finally {
+  } finally {
     loading.value = false;
-    router.push('/dashboard')
   }
 
 };
