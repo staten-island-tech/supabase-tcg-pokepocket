@@ -53,6 +53,8 @@ const password = ref('');
 const error = ref(null);
 const loading = ref(false);
 
+const authStore = useAuthStore()
+
 const handleSignin = async () => {
   error.value = null;
   loading.value = true;
