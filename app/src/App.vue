@@ -1,6 +1,9 @@
 <script setup>
+import account from './supabase'
 import { onMounted } from 'vue'
 import { RouterLink, RouterView } from 'vue-router'
+import { useAuthStore } from './stores/auth'
+const authStore = useAuthStore()
 
 //  
 onMounted(async () => {
