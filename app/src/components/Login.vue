@@ -56,7 +56,7 @@ const handleSignin = async () => {
 
     showLoader.value = true;
     setTimeout(() => {
-      router.push('/open-pack');
+      router.push('/pack-opening');  // <== Updated here
     }, 2000);
   } catch (err) {
     error.value = err.message;
