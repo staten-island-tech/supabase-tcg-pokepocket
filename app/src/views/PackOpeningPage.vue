@@ -18,12 +18,8 @@
 </template>
 
 <script>
-import Sidebar from './Sidebar.vue';
 
 export default {
-  components: {
-    Sidebar,
-  },
   data() {
     return {
       cards: [],
