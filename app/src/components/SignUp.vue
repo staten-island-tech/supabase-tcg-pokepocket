@@ -56,9 +56,7 @@
 <script setup>
 
 import { ref, onMounted } from 'vue';
-import account from '@/supabase'; // Make sure this points to your Supabase client
-
-// Reactive variables
+import account from '@/supabase'; 
 const email = ref('');
 const username = ref('');
 const password = ref('');
@@ -77,7 +75,7 @@ const handleSignup = async () => {
       password: password.value,
       options: {
         data: {
-          username: username.value // This goes to `raw_user_meta_data` in your DB
+          username: username.value 
         }
       }
     });
@@ -92,7 +90,7 @@ const handleSignup = async () => {
     }
 
     console.log('Signup successful, user ID:', user.id);
-    // No need to manually insert into 'accounts' — the trigger handles it
+    
   } catch (err) {
     error.value = err.message;
   } finally {

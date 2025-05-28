@@ -83,7 +83,9 @@ const handleSignin = async () => {
       console.log('Auth change:', event);
       if (session) {
         console.log('User is logged in:', session.user);
+        authStore.setUser(session.user)
       } else {
+        authStore.clearUser()
         console.log('User is logged out');
       }
     });

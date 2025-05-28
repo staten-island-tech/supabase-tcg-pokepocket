@@ -1,13 +1,33 @@
 <template>
     <div class="top-bar">
-      <router-link to="/login">
-        <button class="login-button">Log In</button>
-      </router-link>
+
+      <div v-if="currentView === 'SignUp'">
+        <router-link to="/login">
+          <button class="login-button">Log In</button>
+        </router-link>
+      </div>
+
+      <div v-else-if="currentView === 'Login'"> 
+        <router-link to="/">
+          <button class="login-button">Sign Up</button>
+        </router-link>
+      </div>
+      
+       
+
     </div>
   </template>
   
   <script setup>
-  // No need for any JavaScript logic here, just a static link with a button
+  
+  import { computed } from 'vue';
+  import { useRoute } from 'vue-router';
+
+  const route = useRoute()
+
+  const currentView = computed(() => {
+    return route.name  
+  })
   </script> 
   
   <style scoped>
