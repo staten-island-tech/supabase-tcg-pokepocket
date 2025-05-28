@@ -1,118 +1,153 @@
 <template>
-  <div v-if="showLoader">
-    <PokeballLoader />
-  </div>
-  <div v-else class="login-page">
-    <h2>Welcome Trainer</h2>
-    <form @submit.prevent="handleSignin" class="form">
-      <input
-        type="email"
-        v-model="email"
-        placeholder="Email"
-        required
-      />
-      <input
-        type="password"
-        v-model="password"
-        placeholder="Password"
-        required
-      />
-      <button type="submit" :disabled="loading">
-        {{ loading ? 'Signing in...' : 'Sign In' }}
-      </button>
-      <p v-if="error" class="error">{{ error }}</p>
-    </form>
-  </div>
-</template>
+    <div class="signin">
+      <h2>Log In</h2>
+      <form @submit.prevent="handleSignin">
+        <div class="form-group">
+          <label for="email">Gmail</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            placeholder="Enter your Gmail"
+            required
+          />
+        </div>
+  
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            v-model="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+  
+        <button type="submit" :disabled="loading">
+          {{ loading ? 'Signing In...' : 'Log In' }}
+        </button>
+  
+        <div v-if="error" class="error">
+          <p>{{ error }}</p>
+        </div>
+  
+        <p class="signup-link">
+          Don't have an account?
+          <router-link to="/">Sign Up</router-link>
+        </p>
+  
+      </form>
+    </div>
+  </template>
+  
 
 <script setup>
 import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import PokeballLoader from './PokeballLoader.vue';
 import account from '@/supabase';
+import { createPinia } from 'pinia'; 
+import { useAuthStore } from '../stores/auth'
 
-const router = useRouter();
 const email = ref('');
 const password = ref('');
 const error = ref(null);
 const loading = ref(false);
-const showLoader = ref(false);
+
+const authStore = useAuthStore()
 
 const handleSignin = async () => {
   error.value = null;
   loading.value = true;
 
   try {
+
     const { data, error: authError } = await account.auth.signInWithPassword({
       email: email.value,
       password: password.value,
     });
 
-    if (authError) throw authError;
+    if (authError) {
+      throw authError;
+    }
+
     const user = data?.user;
-    if (!user) throw new Error('Login succeeded but no user object returned.');
+    if (!user) {
+      throw new Error('Login succeeded but no user object returned.');
+    }
 
     console.log('Login successful, user ID:', user.id);
 
-    showLoader.value = true;
-    setTimeout(() => {
-      router.push('/pack-opening');  // <== Updated here
-    }, 2000);
+    authStore.setUser(user)
+
+    account.auth.onAuthStateChange((event, session) => {
+      console.log('Auth change:', event);
+      if (session) {
+        console.log('User is logged in:', session.user);
+        authStore.setUser(session.user)
+      } else {
+        authStore.clearUser()
+        console.log('User is logged out');
+      }
+    });
+
+    router.push('/dashboard')
+
   } catch (err) {
     error.value = err.message;
   } finally {
     loading.value = false;
   }
+
 };
+
 </script>
 
+
 <style scoped>
-.login-page {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 2rem;
-  min-height: 100vh;
-  background: linear-gradient(to bottom, #f2f2f2, #d9d9d9);
+.signin {
+  max-width: 400px;
+  margin: auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
 }
 
-h2 {
-  font-size: 2rem;
-  margin-bottom: 1.5rem;
+.form-group {
+  margin-bottom: 16px;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  width: 300px;
-  gap: 1rem;
+label {
+  display: block;
+  margin-bottom: 8px;
 }
 
 input {
-  padding: 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  font-size: 1rem;
+  width: 100%;
+  padding: 8px;
+  margin-top: 4px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
 }
 
 button {
-  padding: 0.75rem;
-  background-color: #ff3c3c;
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
   color: white;
   border: none;
-  border-radius: 8px;
-  font-weight: bold;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  font-size: 16px;
 }
 
-button:hover {
-  background-color: #e63232;
+button:disabled {
+  background-color: #ddd;
+  cursor: not-allowed;
 }
 
 .error {
   color: red;
-  font-size: 0.9rem;
-  margin-top: 0.5rem;
+  margin-top: 16px;
 }
 </style>
