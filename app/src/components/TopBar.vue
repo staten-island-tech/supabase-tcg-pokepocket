@@ -35,15 +35,20 @@
   <style scoped>
   .top-bar {
     background-color: white;
-    padding: 10px 20px;
+    height: 10vh; /* Takes up 10% of viewport height */
+    width: 100vw; /* Takes up full viewport width */
+    padding: 0 20px;
     box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: fixed;
     top: 0;
-    width: 100%;
+    left: 0;
     z-index: 1000;
+    box-sizing: border-box;
   }
-  
+
   .login-button {
     padding: 8px 16px;
     font-size: 16px;
