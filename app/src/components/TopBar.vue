@@ -12,8 +12,6 @@
           <button class="login-button">Sign Up</button>
         </router-link>
       </div>
-      
-       
 
     </div>
   </template>
