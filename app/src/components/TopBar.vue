@@ -13,6 +13,10 @@
         </router-link>
       </div>
 
+      <div v-else-if="currentView === 'Inventory'">
+        <button class="login-button">E</button>
+      </div>
+
     </div>
   </template>
   

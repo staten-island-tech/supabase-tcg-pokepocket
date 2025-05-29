@@ -21,7 +21,7 @@ const routes = [
     component: PackOpening, 
   },
   {
-    path: '/inventory-page',
+    path: '/inventory',
     name: 'Inventory',
     component: InventoryPage,
   }

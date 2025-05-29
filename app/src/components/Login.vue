@@ -47,12 +47,13 @@ import { ref } from 'vue';
 import account from '@/supabase';
 import { createPinia } from 'pinia'; 
 import { useAuthStore } from '../stores/auth'
+import { useRouter } from 'vue-router'
 
 const email = ref('');
 const password = ref('');
 const error = ref(null);
 const loading = ref(false);
-
+const router = useRouter()
 const authStore = useAuthStore()
 
 const handleSignin = async () => {
@@ -90,7 +91,7 @@ const handleSignin = async () => {
       }
     });
 
-    router.push('/dashboard')
+    router.push('/inventory')
 
   } catch (err) {
     error.value = err.message;
