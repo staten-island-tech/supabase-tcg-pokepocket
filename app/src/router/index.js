@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SignupPage from '../views/SignupPage.vue';
 import Login from '../views/LoginPage.vue';
+import InventoryPage from '../views/InventoryPage.vue';
 import PackOpening from '../components/PackOpening.vue';
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
     name: 'PackOpening',
     component: PackOpening, 
   },
+  {
+    path: '/inventory-page',
+    name: 'Inventory',
+    component: InventoryPage,
+  }
 ];
 
 const router = createRouter({

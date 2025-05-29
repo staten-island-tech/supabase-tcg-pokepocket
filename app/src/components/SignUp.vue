@@ -56,12 +56,15 @@
 <script setup>
 
 import { ref, onMounted } from 'vue';
+import  {useRouter } from 'vue-router'
 import account from '@/supabase'; 
+
 const email = ref('');
 const username = ref('');
 const password = ref('');
 const error = ref(null);
 const loading = ref(false);
+const router = useRouter()
 
 // Signup function
 const handleSignup = async () => {
@@ -104,7 +107,7 @@ onMounted(async () => {
   } = await account.auth.getSession();
 
   if (session?.user) {
-    router.push('/dashboard');
+    router.push('/inventory');
   }
 });
 
