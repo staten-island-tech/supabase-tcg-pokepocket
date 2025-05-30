@@ -1,6 +1,8 @@
 <template>
   <div class="signin">
+
     <h2>Log In</h2>
+    
     <form @submit.prevent="handleSignin">
       <div class="form-group">
         <label for="email">Gmail</label>
@@ -36,9 +38,10 @@
         Don't have an account?
         <router-link to="/">Sign Up</router-link>
       </p>
-  
     </form>
+
   </div>
+
 </template>
 
 
@@ -84,7 +87,7 @@ const handleSignin = async () => {
       console.log('Auth change:', event);
       if (session) {
         console.log('User is logged in:', session.user);
-        authStore.setUser(session.user)
+        authStore.setUser(session.user) // saves the session
       } else {
         authStore.clearUser()
         console.log('User is logged out');
