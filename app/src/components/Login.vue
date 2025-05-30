@@ -1,46 +1,46 @@
 <template>
-    <div class="signin">
-      <h2>Log In</h2>
-      <form @submit.prevent="handleSignin">
-        <div class="form-group">
-          <label for="email">Gmail</label>
-          <input
-            type="email"
-            id="email"
-            v-model="email"
-            placeholder="Enter your Gmail"
-            required
-          />
-        </div>
+  <div class="signin">
+    <h2>Log In</h2>
+    <form @submit.prevent="handleSignin">
+      <div class="form-group">
+        <label for="email">Gmail</label>
+        <input
+          type="email"
+          id="email"
+          v-model="email"
+          placeholder="Enter your Gmail"
+          required
+        />
+      </div>
   
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            v-model="password"
-            placeholder="Enter your password"
-            required
-          />
-        </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          v-model="password"
+          placeholder="Enter your password"
+          required
+        />
+      </div>
   
-        <button type="submit" :disabled="loading">
-          {{ loading ? 'Signing In...' : 'Log In' }}
-        </button>
+      <button type="submit" :disabled="loading">
+        {{ loading ? 'Signing In...' : 'Log In' }}
+      </button>
   
-        <div v-if="error" class="error">
-          <p>{{ error }}</p>
-        </div>
+      <div v-if="error" class="error">
+        <p>{{ error }}</p>
+      </div>
   
-        <p class="signup-link">
-          Don't have an account?
-          <router-link to="/">Sign Up</router-link>
-        </p>
+      <p class="signup-link">
+        Don't have an account?
+        <router-link to="/">Sign Up</router-link>
+      </p>
   
-      </form>
-    </div>
-  </template>
-  
+    </form>
+  </div>
+</template>
+
 
 <script setup>
 import { ref } from 'vue';
