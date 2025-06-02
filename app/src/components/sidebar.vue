@@ -1,4 +1,3 @@
-<!-- components/Sidebar.vue -->
 <template>
     <div class="sidebar">
       <router-link to="/pack-opening" class="link">Open Pack</router-link>

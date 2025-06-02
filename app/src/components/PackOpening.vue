@@ -1,4 +1,5 @@
 <template>
+  <div :class="['blur-wrapper', { blur: blurring }]">
   <div class="pack-opening-container">
     <div v-if="selectedCard" class="zoom-overlay" @click.self="closeZoom">
       <div
@@ -10,13 +11,22 @@
         <img :src="selectedCard.images.large || selectedCard.images.small" :alt="selectedCard.name" />
       </div>
     </div>
+    </div>
 
     <div v-if="loading" class="loader-container">
       <div class="pokeball"></div>
     </div>
 
     <div v-else>
-      <div class="open-button-container" v-if="!cards.length">
+      <div v-if="!cards.length" class="open-button-container">
+        <div class="pack-wrapper">
+          <img
+            src="@/assets/151-pack.png"
+            alt="Booster Pack"
+            class="booster-pack"
+            :class="{ shake: isShaking }"
+          />
+        </div>
         <button @click="openPack" class="open-button">Open a Pack</button>
       </div>
 
@@ -31,7 +41,9 @@
           <img :src="card.images.small" :alt="card.name" />
         </div>
       </div>
-    </div>
+    <div>
+  </div>
+  </div>
   </div>
 </template>
 
@@ -43,6 +55,9 @@ export default {
       cards: [],
       cardVisibility: [],
       selectedCard: null,
+      isShaking: false,
+      blurring: false 
+
     };
   },
   mounted() {
@@ -53,22 +68,28 @@ export default {
   methods: {
     async openPack() {
       try {
+        this.blurring = true 
+        this.isShaking = true;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.isShaking = false;
+
         const response = await fetch('https://api.pokemontcg.io/v2/cards?pageSize=10');
         const data = await response.json();
         this.cards = data.data;
         this.cardVisibility = Array(this.cards.length).fill(false);
+
         this.revealCards();
       } catch (error) {
         console.error('Failed to fetch cards:', error);
       }
     },
     revealCards() {
-  this.cards.forEach((_, index) => {
-    setTimeout(() => {
-      this.cardVisibility[index] = true;
-    }, index * 300);
-  });
-},
+      this.cards.forEach((_, index) => {
+        setTimeout(() => {
+          this.cardVisibility[index] = true;
+        }, index * 300);
+      });
+    },
     zoomCard(card) {
       this.selectedCard = card;
     },
@@ -130,8 +151,6 @@ export default {
   height: auto;
   border-radius: 12px;
 }
-
-
 
 @keyframes zoomIn {
   from {
@@ -203,6 +222,9 @@ export default {
 
 .open-button-container {
   margin: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .open-button {
@@ -213,6 +235,7 @@ export default {
   border: none;
   border-radius: 12px;
   cursor: pointer;
+  margin-top: 16px;
 }
 
 .cards-container {
@@ -229,15 +252,39 @@ export default {
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
-.fade-in {
-  opacity: 0;
-  animation: fadeIn 0.6s ease forwards;
+.pack-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 8px;
 }
 
-@keyframes fadeIn {
-  to {
-    opacity: 1;
-    transform: scale(1.05);
-  }
+.booster-pack {
+  width: 240px;
+  transition: transform 0.2s ease;
+}
+
+.shake {
+  animation: shake 1s ease;
+}
+.blur-wrapper.blur {
+  filter: blur(6px);
+  pointer-events: none;
+  transition: filter 0.3s ease;
+}
+
+
+@keyframes shake {
+  0% { transform: translateX(0); }
+  10% { transform: translateX(-10px); }
+  20% { transform: translateX(10px); }
+  30% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  50% { transform: translateX(-8px); }
+  60% { transform: translateX(8px); }
+  70% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+  90% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
 }
 </style>
