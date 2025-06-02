@@ -1,16 +1,33 @@
 <template>
   <div class="pack-opening-container">
+    <div v-if="selectedCard" class="zoom-overlay" @click.self="closeZoom">
+      <div
+        class="zoom-card"
+        @mousemove="handleMouseMove"
+        @mouseleave="resetTilt"
+        ref="zoomCard"
+      >
+        <img :src="selectedCard.images.large || selectedCard.images.small" :alt="selectedCard.name" />
+      </div>
+    </div>
+
     <div v-if="loading" class="loader-container">
       <div class="pokeball"></div>
     </div>
 
     <div v-else>
-      <div class="open-button-container">
+      <div class="open-button-container" v-if="!cards.length">
         <button @click="openPack" class="open-button">Open a Pack</button>
       </div>
 
-      <div class="cards-container" v-if="cards.length">
-        <div v-for="(card, index) in cards" :key="index" class="card">
+      <div class="cards-container">
+        <div
+          v-for="(card, index) in cards"
+          :key="index"
+          class="card"
+          v-show="cardVisibility[index]"
+          @click="zoomCard(card)"
+        >
           <img :src="card.images.small" :alt="card.name" />
         </div>
       </div>
@@ -24,12 +41,14 @@ export default {
     return {
       loading: true,
       cards: [],
+      cardVisibility: [],
+      selectedCard: null,
     };
   },
   mounted() {
     setTimeout(() => {
       this.loading = false;
-    }, 2000); // Show Pokéball loader for 2 seconds
+    }, 2000);
   },
   methods: {
     async openPack() {
@@ -37,15 +56,94 @@ export default {
         const response = await fetch('https://api.pokemontcg.io/v2/cards?pageSize=10');
         const data = await response.json();
         this.cards = data.data;
+        this.cardVisibility = Array(this.cards.length).fill(false);
+        this.revealCards();
       } catch (error) {
         console.error('Failed to fetch cards:', error);
       }
     },
-  },
+    revealCards() {
+  this.cards.forEach((_, index) => {
+    setTimeout(() => {
+      this.cardVisibility[index] = true;
+    }, index * 300);
+  });
+},
+    zoomCard(card) {
+      this.selectedCard = card;
+    },
+    closeZoom() {
+      this.selectedCard = null;
+    },
+    handleMouseMove(event) {
+      const card = this.$refs.zoomCard;
+      const rect = card.getBoundingClientRect();
+      const x = event.clientX - rect.left;
+      const y = event.clientY - rect.top;
+
+      const centerX = rect.width / 3;
+      const centerY = rect.height / 3;
+
+      const rotateX = ((y - centerY) / centerY) * -20;
+      const rotateY = ((x - centerX) / centerX) * 20;
+
+      card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`;
+    },
+    resetTilt() {
+      const card = this.$refs.zoomCard;
+      card.style.transform = `rotateX(0deg) rotateY(0deg) scale(1.05)`;
+    }
+  }
 };
 </script>
 
 <style scoped>
+.zoom-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  perspective: 1000px;
+}
+
+.zoom-card {
+  position: relative;
+  max-width: 400px;
+  max-height: 600px;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  animation: zoomIn 1s ease-out;
+  transition: transform 0.2s ease-in;
+  will-change: transform;
+}
+
+.zoom-card img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+
+
+@keyframes zoomIn {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 .pack-opening-container {
   min-height: 100vh;
   display: flex;
@@ -129,5 +227,17 @@ export default {
   width: 150px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.fade-in {
+  opacity: 0;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  to {
+    opacity: 1;
+    transform: scale(1.05);
+  }
 }
 </style>
