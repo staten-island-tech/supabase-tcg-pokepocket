@@ -1,69 +1,95 @@
 <template>
-    <div class="top-bar">
-
-      <div v-if="currentView === 'SignUp'">
-        <router-link to="/login">
-          <button class="login-button">Log In</button>
-        </router-link>
-      </div>
-
-      <div v-else-if="currentView === 'Login'"> 
-        <router-link to="/">
-          <button class="login-button">Sign Up</button>
-        </router-link>
-      </div>
-
-      <div v-else-if="currentView === 'Inventory'">
-        <button class="login-button">E</button>
-      </div>
-
+  <div class="top-bar">
+   
+    <div class="left-section" v-if="currentView === 'Inventory'">
+      <button class="circle-menu-button" @click="toggleSidebar">
+        <img src="/menu.svg" alt="Menu" />
+      </button>
     </div>
-  </template>
-  
-  <script setup>
-  
-  import { computed } from 'vue';
-  import { useRoute } from 'vue-router';
 
-  const route = useRoute()
+    <div v-if="currentView === 'SignUp'">
+      <router-link to="/login">
+        <button class="login-button">Log In</button>
+      </router-link>
+    </div>
 
-  const currentView = computed(() => {
-    return route.name  
-  })
-  </script> 
+    <div v-else-if="currentView === 'Login'"> 
+      <router-link to="/">
+        <button class="login-button">Sign Up</button>
+      </router-link>
+    </div>
+
+    <div v-else-if="currentView === 'Inventory'">
+      <SideBar v-if="showSidebar" @close="showSidebar = false" />
+    </div>
+  </div>
+</template>
+
   
-  <style scoped>
+<script setup>
+
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
+import { ref } from 'vue'
+import SideBar from '@/components/SideBar.vue'
+
+const route = useRoute()
+
+const currentView = computed(() => {
+  return route.name  
+})
+
+const showSidebar = ref(false)
+const toggleSidebar = () => {
+  showSidebar.value = !showSidebar.value
+}
+</script> 
+  
+<style scoped>
   .top-bar {
-    background-color: white;
-    height: 10vh; /* Takes up 10% of viewport height */
-    width: 100vw; /* Takes up full viewport width */
-    padding: 0 20px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 1000;
-    box-sizing: border-box;
-  }
+  background-color: white;
+  height: 10vh;
+  width: 100vw;
+  padding: 0 20px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: space-between; /* Spread content left to right */
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+}
 
-  .login-button {
-    padding: 8px 16px;
-    font-size: 16px;
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: bold;
-    text-decoration: none;
-    transition: background-color 0.3s ease;
-  }
-  
-  .login-button:hover {
-    background-color: #45a049;
-  }
-  </style>
+.left-section {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.circle-menu-button {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.circle-menu-button img {
+  width: 20px;
+  height: 20px;
+}
+
+.circle-menu-button:active {
+  background-color: #c7c7c7; /* Darkens when clicked */
+}
+
+</style>
   
