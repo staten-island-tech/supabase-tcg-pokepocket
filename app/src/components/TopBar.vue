@@ -72,7 +72,7 @@ const toggleSidebar = () => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background-color: #e0e0e0;
+  background-color: white; /* White by default */
   border: none;
   display: flex;
   align-items: center;
@@ -80,6 +80,7 @@ const toggleSidebar = () => {
   padding: 0;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); /* Optional subtle shadow */
 }
 
 .circle-menu-button img {
@@ -87,9 +88,10 @@ const toggleSidebar = () => {
   height: 20px;
 }
 
-.circle-menu-button:active {
-  background-color: #c7c7c7; /* Darkens when clicked */
+.circle-menu-button:hover {
+  background-color: #f0f0f0; /* Light gray on hover */
 }
+
 
 </style>
   
