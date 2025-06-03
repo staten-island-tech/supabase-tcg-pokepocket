@@ -22,11 +22,13 @@ export default {
 <style scoped>
 .inventory-page {
   display: flex;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .main-content {
-  margin-left: 200px;
+  flex: 1;
   padding: 1rem;
-  width: 100%;
+  overflow-y: auto;
 }
 </style>

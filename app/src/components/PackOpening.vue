@@ -1,50 +1,53 @@
 <template>
-  <div :class="['blur-wrapper', { blur: blurring }]">
-  <div class="pack-opening-container">
-    <div v-if="selectedCard" class="zoom-overlay" @click.self="closeZoom">
-      <div
-        class="zoom-card"
-        @mousemove="handleMouseMove"
-        @mouseleave="resetTilt"
-        ref="zoomCard"
-      >
-        <img :src="selectedCard.images.large || selectedCard.images.small" :alt="selectedCard.name" />
-      </div>
-    </div>
-    </div>
-
-    <div v-if="loading" class="loader-container">
-      <div class="pokeball"></div>
-    </div>
-
-    <div v-else>
-      <div v-if="!cards.length" class="open-button-container">
-        <div class="pack-wrapper">
-          <img
-            src="@/assets/151-pack.png"
-            alt="Booster Pack"
-            class="booster-pack"
-            :class="{ shake: isShaking }"
-          />
-        </div>
-        <button @click="openPack" class="open-button">Open a Pack</button>
-      </div>
-
-      <div class="cards-container">
+    <div class="pack-opening-container">
+      <div v-if="selectedCard" class="zoom-overlay" @click.self="closeZoom">
         <div
-          v-for="(card, index) in cards"
-          :key="index"
-          class="card"
-          v-show="cardVisibility[index]"
-          @click="zoomCard(card)"
+          class="zoom-card"
+          @mousemove="handleMouseMove"
+          @mouseleave="resetTilt"
+          ref="zoomCard"
         >
-          <img :src="card.images.small" :alt="card.name" />
+          <img :src="selectedCard.images.large || selectedCard.images.small" :alt="selectedCard.name" />
         </div>
       </div>
-    <div>
-  </div>
-  </div>
-  </div>
+
+      <div v-if="loading" class="loader-container">
+        <div class="pokeball"></div>
+      </div>
+
+      <div v-else>
+        <div v-if="!cards.length" class="open-button-container">
+          <div class="pack-wrapper">
+            <img
+              src="@/assets/151-pack.png"
+              alt="Booster Pack"
+              class="booster-pack"
+              :class="{ shake: isShaking }"
+            />
+          </div>
+          <button @click="openPack" class="open-button">Open a Pack</button>
+        </div>
+
+        <div class="cards-container">
+          <div
+            v-for="(card, index) in cards"
+            :key="index"
+            class="card"
+            v-show="cardVisibility[index]"
+            @click="zoomCard(card)"
+          >
+            <img :src="card.images.small" :alt="card.name" />
+          </div>
+        </div> <!-- close cards-container -->
+
+        <div v-if="cards.length" class="add-inventory-container">
+  <button @click="addToInventory" class="add-inventory-button">
+    Add Cards to Inventory
+  </button>
+</div>
+
+      </div> <!-- close v-else -->
+    </div> <!-- close pack-opening-container -->
 </template>
 
 <script>
@@ -56,7 +59,6 @@ export default {
       cardVisibility: [],
       selectedCard: null,
       isShaking: false,
-      blurring: false 
 
     };
   },
@@ -66,23 +68,52 @@ export default {
     }, 2000);
   },
   methods: {
-    async openPack() {
-      try {
-        this.blurring = true 
-        this.isShaking = true;
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        this.isShaking = false;
+    
+  addToInventory() {
+    try {
+      // Get any existing inventory from localStorage or start fresh
+      const existingInventory = JSON.parse(localStorage.getItem('pokemonInventory')) || [];
 
-        const response = await fetch('https://api.pokemontcg.io/v2/cards?pageSize=10');
-        const data = await response.json();
-        this.cards = data.data;
-        this.cardVisibility = Array(this.cards.length).fill(false);
+      // Combine existing inventory with new cards
+      // Avoid duplicates by card id (you can customize this)
+      const newInventory = [...existingInventory];
 
-        this.revealCards();
-      } catch (error) {
-        console.error('Failed to fetch cards:', error);
-      }
-    },
+      this.cards.forEach(card => {
+        if (!newInventory.find(c => c.id === card.id)) {
+          newInventory.push(card);
+        }
+      });
+
+      // Save back to localStorage
+      localStorage.setItem('pokemonInventory', JSON.stringify(newInventory));
+
+      alert('Cards added to inventory!');
+    } catch (error) {
+      console.error('Error adding to inventory:', error);
+    }
+  },
+
+  async openPack() {
+  try {
+    this.blurring = true;
+    this.isShaking = true;
+    await new Promise(resolve => setTimeout(resolve, 1000));
+    this.isShaking = false;
+
+    // There are about ~14000 cards total, so 1400 pages with pageSize=10
+    const randomPage = Math.floor(Math.random() * 1400) + 1;
+
+    const response = await fetch(`https://api.pokemontcg.io/v2/cards?pageSize=10&page=${randomPage}`);
+    const data = await response.json();
+    this.cards = data.data;
+    this.cardVisibility = Array(this.cards.length).fill(false);
+
+    this.revealCards();
+  } catch (error) {
+    console.error('Failed to fetch cards:', error);
+  }
+},
+
     revealCards() {
       this.cards.forEach((_, index) => {
         setTimeout(() => {
@@ -267,11 +298,17 @@ export default {
 .shake {
   animation: shake 1s ease;
 }
-.blur-wrapper.blur {
-  filter: blur(6px);
-  pointer-events: none;
-  transition: filter 0.3s ease;
+.add-inventory-button {
+  padding: 10px 20px;
+  font-size: 18px;
+  background-color: #1d3557;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 20px;
 }
+
 
 
 @keyframes shake {
