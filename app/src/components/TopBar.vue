@@ -1,10 +1,19 @@
 <template>
   <div class="top-bar">
-   
     <div class="left-section" v-if="currentView === 'Inventory'">
       <button class="circle-menu-button" @click="toggleSidebar">
         <img src="/menu.svg" alt="Menu" />
       </button>
+
+      <div class="user-tab-container">
+        <button class="user-tab-button" @click="toggleTab">
+          <img src="/user-pen.svg" alt="User" />
+        </button>
+
+        <div v-if="showTab" ref="tabRef" class="user-tab">
+          <p>Edit user settings</p>
+        </div>
+      </div>
     </div>
 
     <div v-if="currentView === 'SignUp'">
@@ -13,7 +22,7 @@
       </router-link>
     </div>
 
-    <div v-else-if="currentView === 'Login'"> 
+    <div v-else-if="currentView === 'Login'">
       <router-link to="/">
         <button class="login-button">Sign Up</button>
       </router-link>
@@ -25,6 +34,7 @@
   </div>
 </template>
 
+
   
 <script setup>
 
@@ -34,64 +44,69 @@ import { ref } from 'vue'
 import SideBar from '@/components/SideBar.vue'
 
 const route = useRoute()
+const showSidebar = ref(false)
+const tabRef = ref(null)
 
 const currentView = computed(() => {
   return route.name  
 })
 
-const showSidebar = ref(false)
 const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value
 }
+
+const toggleTab = () => {
+  showTab.value = !showTab.value
+}
+
+const handleClickOutside = (event) => {
+  if (showTab.value && tabRef.value && !tabRef.value.contains(event.target)) {
+    showTab.value = false
+  }
+}
+
+
 </script> 
   
 <style scoped>
-  .top-bar {
-  background-color: white;
-  height: 10vh;
-  width: 100vw;
-  padding: 0 20px;
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-  display: flex;
-  align-items: center;
-  justify-content: space-between; /* Spread content left to right */
+.top-bar {
   position: fixed;
   top: 0;
   left: 0;
+  right: 0;
   z-index: 1000;
-  box-sizing: border-box;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .left-section {
   display: flex;
   align-items: center;
-  height: 100%;
+  gap: 1rem;
 }
 
-.circle-menu-button {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background-color: white; /* White by default */
+.circle-menu-button,
+.user-tab-button {
+  background: none;
   border: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
   cursor: pointer;
-  transition: background-color 0.2s ease;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1); /* Optional subtle shadow */
 }
 
-.circle-menu-button img {
-  width: 20px;
-  height: 20px;
+.user-tab-container {
+  position: relative;
 }
 
-.circle-menu-button:hover {
-  background-color: #f0f0f0; /* Light gray on hover */
+.user-tab {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
 }
-
-
 </style>
-  
