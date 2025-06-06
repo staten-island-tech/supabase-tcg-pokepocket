@@ -51,21 +51,6 @@ const currentView = computed(() => {
   return route.name  
 })
 
-const toggleSidebar = () => {
-  showSidebar.value = !showSidebar.value
-}
-
-const toggleTab = () => {
-  showTab.value = !showTab.value
-}
-
-const handleClickOutside = (event) => {
-  if (showTab.value && tabRef.value && !tabRef.value.contains(event.target)) {
-    showTab.value = false
-  }
-}
-
-
 </script> 
   
 <style scoped>
@@ -93,7 +78,16 @@ const handleClickOutside = (event) => {
   background: none;
   border: none;
   cursor: pointer;
+  transition: background-color 0.2s ease;
+  border-radius: 50%;
+  padding: 5px;
 }
+
+.circle-menu-button:hover,
+.user-tab-button:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
 
 .user-tab-container {
   position: relative;
