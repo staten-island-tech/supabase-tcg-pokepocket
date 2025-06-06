@@ -1,12 +1,19 @@
 <template>
   <div class="top-bar">
-    <div class="left-section" v-if="currentView === 'Inventory'">
-      <button class="circle-menu-button" @click="toggleSidebar">
+    
+    <div class="left-section">
+      <button
+        v-if="currentView === 'Inventory'"
+        class="circle-menu-button"
+        @click="toggleSidebar"
+      >
         <img src="/menu.svg" alt="Menu" />
       </button>
+    </div>
 
-      <div class="user-tab-container">
-        <button class="user-tab-button" @click="toggleTab">
+    <div class="right-section">
+      <div v-if="currentView === 'Inventory'" class="user-tab-container">
+        <button class="user-tab-button" @click="toggletab">
           <img src="/user-pen.svg" alt="User" />
         </button>
 
@@ -14,33 +21,24 @@
           <p>Edit user settings</p>
         </div>
       </div>
-    </div>
 
-    <div v-if="currentView === 'SignUp'">
-      <router-link to="/login">
+      <router-link v-else-if="currentView === 'SignUp'" to="/login">
         <button class="login-button">Log In</button>
       </router-link>
-    </div>
 
-    <div v-else-if="currentView === 'Login'">
-      <router-link to="/">
+      <router-link v-else-if="currentView === 'Login'" to="/">
         <button class="login-button">Sign Up</button>
       </router-link>
     </div>
 
-    <div v-else-if="currentView === 'Inventory'">
-      <SideBar v-if="showSidebar" @close="showSidebar = false" />
-    </div>
+    <SideBar v-if="currentView === 'Inventory' && showSidebar" @close="showSidebar = false" />
   </div>
 </template>
-
-
   
 <script setup>
 
-import { computed } from 'vue';
+import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
-import { ref } from 'vue'
 import SideBar from '@/components/SideBar.vue'
 
 const route = useRoute()
@@ -62,12 +60,14 @@ const currentView = computed(() => {
   z-index: 1000;
   background-color: #fff;
   display: flex;
+  justify-content: space-between; /* spreads left and right */
   align-items: center;
   padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.left-section {
+.left-section,
+.right-section {
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -87,7 +87,6 @@ const currentView = computed(() => {
 .user-tab-button:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
-
 
 .user-tab-container {
   position: relative;
