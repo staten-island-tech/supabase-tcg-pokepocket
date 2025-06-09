@@ -16,6 +16,11 @@
         <button class="user-tab-button">
           <img src="/user-pen.svg" alt="User" />
         </button>
+
+        <div v-show="showUserTab" class="user-tab-popup">
+          <p>User Settings</p>
+          <button @click="logout">Log Out</button>
+        </div>
       </div>
 
       <router-link v-else-if="currentView === 'SignUp'" to="/login">
@@ -34,14 +39,27 @@
 
 import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useAuthStore } from '@/stores/auth.js';
+
 import SideBar from '@/components/SideBar.vue'
 
 const route = useRoute()
-const showSidebar = ref(false)
+const showProfile = ref(false)
+const authStore = useAuthStore()
 
 const currentView = computed(() => {
   return route.name  
 })
+
+async function logout() {
+  const { error } = await SupabaseAuthClient.auth.signOut()
+  if (error) {
+    console.error('Error logging out:', error.message)
+  } else {
+    authStore.clearUser()
+    router.push('/')
+  }
+}
 
 </script> 
   
