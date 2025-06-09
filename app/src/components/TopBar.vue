@@ -13,13 +13,9 @@
 
     <div class="right-section">
       <div v-if="currentView === 'Inventory'" class="user-tab-container">
-        <button class="user-tab-button" @click="toggletab">
+        <button class="user-tab-button">
           <img src="/user-pen.svg" alt="User" />
         </button>
-
-        <div v-if="showTab" ref="tabRef" class="user-tab">
-          <p>Edit user settings</p>
-        </div>
       </div>
 
       <router-link v-else-if="currentView === 'SignUp'" to="/login">
@@ -31,7 +27,6 @@
       </router-link>
     </div>
 
-    <SideBar v-if="currentView === 'Inventory' && showSidebar" @close="showSidebar = false" />
   </div>
 </template>
   
@@ -43,7 +38,6 @@ import SideBar from '@/components/SideBar.vue'
 
 const route = useRoute()
 const showSidebar = ref(false)
-const tabRef = ref(null)
 
 const currentView = computed(() => {
   return route.name  
