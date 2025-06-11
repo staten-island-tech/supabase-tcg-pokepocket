@@ -41,7 +41,7 @@ import { ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 
-import SideBar from '@/components/SideBar.vue'
+import account from '@/supabase'; 
 
 const route = useRoute()
 const showProfile = ref(false)
@@ -52,7 +52,7 @@ const currentView = computed(() => {
 })
 
 async function logout() {
-  const { error } = await SupabaseAuthClient.auth.signOut()
+  const { error } = await account.auth.signOut()
   if (error) {
     console.error('Error logging out:', error.message)
   } else {
