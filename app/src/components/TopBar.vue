@@ -37,15 +37,15 @@
   
 <script setup>
 
-import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 
 import SideBar from '@/components/SideBar.vue'
 
-const route = useRoute()
-const showProfile = ref(false)
-const authStore = useAuthStore()
+const route = useRoute();
+const router = useRouter();
+const authStore = useAuthStore();
 
 const currentView = computed(() => {
   return route.name  
