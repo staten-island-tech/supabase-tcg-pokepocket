@@ -56,7 +56,7 @@
 <script setup>
 
 import { ref, onMounted } from 'vue';
-import  {useRouter } from 'vue-router'
+import { useRouter } from 'vue-router'
 import account from '@/supabase'; 
 
 const email = ref('');
@@ -66,19 +66,18 @@ const error = ref(null);
 const loading = ref(false);
 const router = useRouter()
 
-// Signup function
 const handleSignup = async () => {
   error.value = null;
-  loading.value = true;
+  loading.value = true; // clear all errors and load
 
   try {
-    // Sign up with Supabase Auth and include `username` in metadata
+    
     const { data, error: authError } = await account.auth.signUp({
       email: email.value,
-      password: password.value,
+      password: password.value, 
       options: {
         data: {
-          username: username.value 
+          username: username.value // username metadata 
         }
       }
     });
@@ -106,10 +105,10 @@ onMounted(async () => {
     data: { session }
   } = await account.auth.getSession();
 
-  if (session?.user) {
+  if (session?.user) { // if session not null/undfined, access session.user, otherwise return undefined --> safer and cleaner
     router.push('/inventory');
   }
-});
+}); // redirect if already logged in
 
 </script>
 
