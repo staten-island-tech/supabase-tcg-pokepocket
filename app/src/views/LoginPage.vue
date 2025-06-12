@@ -1,13 +1,11 @@
 <template>
     <div>
-        <TopBar />
         <Login />
     </div>
 </template>
 
 <script setup>
-import Login from '@/components/LogIn.vue'
-import TopBar from '@/components/TopBar.vue';
+import Login from '@/components/LogIn.vue';
 </script>
 
 <style scoped>
