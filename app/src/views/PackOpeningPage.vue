@@ -1,6 +1,5 @@
 <template>
   <div class="pack-opening-page">
-    <Sidebar />
     <div class="main-content">
       <PackOpening />
     </div>

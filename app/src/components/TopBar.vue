@@ -1,18 +1,30 @@
 <template>
   <div class="top-bar">
-    
     <div class="left-section">
       <button
-        v-if="currentView === 'Inventory'"
+        v-if="currentView === 'Inventory' || currentView === 'PackOpening'"
         class="circle-menu-button"
-        @click="toggleSidebar"
+        ref="menuButtonRef"
+        @click.stop="sidebarVisible = true"
       >
         <img src="/menu.svg" alt="Menu" />
       </button>
     </div>
 
+    <div
+      v-show="sidebarVisible"
+      ref="sidebarRef"
+      class="sidebar-wrapper"
+    >
+      <SideBar />
+    </div>
+
     <div class="right-section">
-      <div v-if="currentView === 'Inventory'" class="user-tab-container" ref="userTabRef">
+      <div
+        v-if="currentView === 'Inventory' || currentView === 'PackOpening'"
+        class="user-tab-container"
+        ref="userTabRef"
+      >
         <button class="user-tab-button" @click.stop="toggleUserTab">
           <img src="/user-pen.svg" alt="User" />
         </button>
@@ -31,42 +43,52 @@
         <button class="login-button">Sign Up</button>
       </router-link>
     </div>
-
   </div>
 </template>
-  
+
 <script setup>
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+import { useAuthStore } from '@/stores/auth.js'
+import account from '@/supabase'
+import SideBar from './sidebar.vue'    // ← match the lowercase filename
 
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import { useAuthStore } from '@/stores/auth.js';
+const route         = useRoute()
+const router        = useRouter()
+const authStore     = useAuthStore()
+const currentView   = computed(() => route.name)
 
-import account from '@/supabase'; 
+const showUserTab   = ref(false)
+const userTabRef    = ref(null)
 
-const route = useRoute()
-const router =  useRouter()
-const authStore = useAuthStore()
-
-const currentView = computed(() => {
-  return route.name  
-})
-const showUserTab = ref(false)
-const userTabRef = ref(null)
+const sidebarVisible = ref(false)
+const sidebarRef     = ref(null)
+const menuButtonRef  = ref(null)
 
 function toggleUserTab() {
   showUserTab.value = !showUserTab.value
 }
 
 function handleClickOutside(event) {
+  
   if (userTabRef.value && !userTabRef.value.contains(event.target)) {
     showUserTab.value = false
+  }
+
+  if (
+    sidebarVisible.value &&
+    sidebarRef.value &&
+    !sidebarRef.value.contains(event.target) &&
+    menuButtonRef.value &&
+    !menuButtonRef.value.contains(event.target)
+  ) {
+    sidebarVisible.value = false
   }
 }
 
 onMounted(() => {
   document.addEventListener('click', handleClickOutside)
 })
-
 onBeforeUnmount(() => {
   document.removeEventListener('click', handleClickOutside)
 })
@@ -80,9 +102,8 @@ async function logout() {
     router.push('/')
   }
 }
+</script>
 
-</script> 
-  
 <style scoped>
 .top-bar {
   position: fixed;
@@ -92,7 +113,7 @@ async function logout() {
   z-index: 1000;
   background-color: #fff;
   display: flex;
-  justify-content: space-between; /* spreads left and right */
+  justify-content: space-between;
   align-items: center;
   padding: 10px 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -124,17 +145,6 @@ async function logout() {
   position: relative;
 }
 
-.user-tab {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: white;
-  border: 1px solid #ccc;
-  padding: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
-  z-index: 1001;
-}
-
 .user-tab-popup {
   position: absolute;
   top: 110%;
@@ -148,5 +158,4 @@ async function logout() {
   min-width: 150px;
   white-space: nowrap;
 }
-
 </style>

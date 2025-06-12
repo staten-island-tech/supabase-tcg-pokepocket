@@ -1,6 +1,5 @@
 <template>
   <div class="inventory-page">
-    <Sidebar />
     <div class="main-content">
       <Inventory />
     </div>
@@ -9,7 +8,6 @@
 
 <script setup>
 import Inventory from '@/components/Inventory.vue';
-import Sidebar from '@/components/Sidebar.vue';
 </script>
 
 <style scoped>
