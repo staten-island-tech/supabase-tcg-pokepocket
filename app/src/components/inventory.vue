@@ -19,7 +19,6 @@ export default {
     };
   },
   mounted() {
-    // Load cards from localStorage on component mount
     const savedCards = JSON.parse(localStorage.getItem('pokemonInventory')) || [];
     this.inventoryCards = savedCards;
   },
@@ -28,54 +27,50 @@ export default {
 
 <style scoped>
 .inventory-container {
+  width: 100%;
   padding: 1rem;
   box-sizing: border-box;
 }
 
 .cards-container {
   display: grid;
-  grid-template-columns: repeat(1, 1fr); /* Default: mobile */
-  gap: 16px;
-  justify-items: center;
-}
-
-/* Tablet */
-@media (min-width: 600px) {
-  .cards-container {
-    grid-template-columns: repeat(4, 1fr);
-  }
-}
-
-/* Desktop */
-@media (min-width: 1024px) {
-  .cards-container {
-    grid-template-columns: repeat(8, 1fr);
-  }
+  grid-template-rows: repeat(5, 1fr); /* 5 rows */
+  grid-auto-flow: column; /* Fill columns first */
+  gap: 24px;
+  width: 100%;
+  height: 100vh; /* Takes full screen height */
+  box-sizing: border-box;
+  overflow-y: auto;
 }
 
 .card {
-  width: 100%;
-  max-width: 100%;
-  padding: 0.5rem;
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .card img {
   width: 100%;
   height: auto;
+  max-width: 160px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   object-fit: contain;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 .card p {
   text-align: center;
-  margin-top: 6px;
+  margin-top: 12px;
+  font-size: 1rem;
   font-weight: bold;
 }
+
 
 
 </style>

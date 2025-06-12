@@ -7,16 +7,9 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Inventory from '@/components/Inventory.vue';
 import Sidebar from '@/components/Sidebar.vue';
-
-export default {
-  components: {
-    Inventory,
-    Sidebar
-  },
-};
 </script>
 
 <style scoped>
@@ -24,6 +17,7 @@ export default {
   display: flex;
   height: 100vh;
   overflow: hidden;
+  width: 100%;
 }
 
 .main-content {
