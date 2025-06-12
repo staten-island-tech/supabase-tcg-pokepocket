@@ -12,13 +12,13 @@
     </div>
 
     <div class="right-section">
-      <div v-if="currentView === 'Inventory'" class="user-tab-container">
-        <button class="user-tab-button">
+      <div v-if="currentView === 'Inventory'" class="user-tab-container" ref="userTabRef">
+        <button class="user-tab-button" @click.stop="toggleUserTab">
           <img src="/user-pen.svg" alt="User" />
         </button>
 
         <div v-show="showUserTab" class="user-tab-popup">
-          <p>User Settings</p>
+          <p>User Settings (maybe)</p>
           <button @click="logout">Log Out</button>
         </div>
       </div>
@@ -37,18 +37,38 @@
   
 <script setup>
 
-import { ref, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.js';
 
 import account from '@/supabase'; 
 
 const route = useRoute()
-const showProfile = ref(false)
+const router =  useRouter()
 const authStore = useAuthStore()
 
 const currentView = computed(() => {
   return route.name  
+})
+const showUserTab = ref(false)
+const userTabRef = ref(null)
+
+function toggleUserTab() {
+  showUserTab.value = !showUserTab.value
+}
+
+function handleClickOutside(event) {
+  if (userTabRef.value && !userTabRef.value.contains(event.target)) {
+    showUserTab.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener('click', handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 
 async function logout() {
@@ -114,4 +134,19 @@ async function logout() {
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   z-index: 1001;
 }
+
+.user-tab-popup {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px 15px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+  z-index: 1001;
+  min-width: 150px;
+  white-space: nowrap;
+}
+
 </style>
