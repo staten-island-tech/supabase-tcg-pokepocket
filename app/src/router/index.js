@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import SignupPage from '../views/SignupPage.vue';
 import Login from '../views/LoginPage.vue';
-import PackOpeningPage from '../views/PackOpeningPage.vue'; // Your wrapper view
+import PackOpening from '../components/PackOpening.vue';
 
 const routes = [
   {
@@ -17,15 +17,8 @@ const routes = [
   {
     path: '/pack-opening',
     name: 'PackOpening',
-    component: PackOpeningPage,  // Use the wrapper view here
+    component: PackOpening, 
   },
-  {
-    path: '/inventory',
-    name: 'Inventory',
-    component: () => import('@/views/InventoryPage.vue'),
-  }
-  
-  
 ];
 
 const router = createRouter({
