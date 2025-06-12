@@ -1,9 +1,9 @@
 <template>
   <div class="signup">
-    <h2>Create an Account</h2>
+    <h2>Become a Pokémon Trainer</h2>
     <form @submit.prevent="handleSignup">
       <div class="form-group">
-        <label for="email">Gmail</label>
+        <label for="email">Trainer Email</label>
         <input
           type="email"
           id="email"
@@ -14,30 +14,38 @@
       </div>
 
       <div class="form-group">
-        <label for="username">Username</label>
+        <label for="username">Trainer Name</label>
         <input
           type="text"
           id="username"
           v-model="username"
-          placeholder="Enter a username"
+          placeholder="Choose your trainer name"
           required
           minlength="3"
         />
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">Secret Code</label>
         <input
           type="password"
           id="password"
           v-model="password"
-          placeholder="Enter your password"
+          placeholder="Create a secret code"
           required
         />
       </div>
 
-      <button type="submit" :disabled="loading">
-        {{ loading ? 'Signing up...' : 'Sign Up' }}
+      <button type="submit" :disabled="loading" class="pokeball-button">
+        <div v-if="loading" class="pokeball-loading">
+          <div class="pokeball">
+            <div class="pokeball-top"></div>
+            <div class="pokeball-middle"></div>
+            <div class="pokeball-bottom"></div>
+            <div class="pokeball-center"></div>
+          </div>
+        </div>
+        <span v-else>Start Your Journey</span>
       </button>
 
       <div v-if="error" class="error">
@@ -45,16 +53,14 @@
       </div>
 
       <p class="login-link">
-        Already have an account?
+        Already a Pokémon Trainer?
         <router-link to="/login">Log In</router-link>
       </p>
-
     </form>
   </div>
 </template>
 
 <script setup>
-
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router'
 import account from '@/supabase'; 
@@ -109,54 +115,180 @@ onMounted(async () => {
     router.push('/inventory');
   }
 }); // redirect if already logged in
-
 </script>
 
 <style scoped>
 .signup {
   max-width: 400px;
-  margin: auto;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  margin: 40px auto;
+  padding: 25px;
+  border-radius: 12px;
+  background-color: #f8f8f8;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 3px solid #3c5aa6; /* Pokémon blue border */
+  position: relative;
+  overflow: hidden;
+}
+
+.signup::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background-color: #ee1515; /* Pokémon red */
+  z-index: 1;
+}
+
+h2 {
+  color: #3c5aa6; /* Pokémon blue */
+  text-align: center;
+  margin-bottom: 25px;
+  font-size: 24px;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
 }
 
 label {
   display: block;
   margin-bottom: 8px;
+  color: #3c5aa6; /* Pokémon blue */
+  font-weight: bold;
+  font-size: 14px;
 }
 
 input {
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px;
+  border: 2px solid #ffcb05; /* Pokémon yellow */
+  border-radius: 8px;
+  background-color: white;
+  transition: all 0.3s ease;
+  font-size: 14px;
 }
 
-button {
+input:focus {
+  outline: none;
+  border-color: #3c5aa6; /* Pokémon blue */
+  box-shadow: 0 0 0 2px rgba(60, 90, 166, 0.2);
+}
+
+.pokeball-button {
   width: 100%;
-  padding: 10px;
-  background-color: #4caf50;
+  padding: 12px;
+  background-color: #ee1515; /* Pokémon red */
   color: white;
   border: none;
-  border-radius: 4px;
+  border-radius: 24px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 48px;
 }
 
-button:disabled {
-  background-color: #ddd;
+.pokeball-button:hover:not(:disabled) {
+  background-color: #cc0000;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(238, 21, 21, 0.3);
+}
+
+.pokeball-button:disabled {
+  background-color: #f8f8f8;
   cursor: not-allowed;
 }
 
+.pokeball-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.pokeball {
+  width: 30px;
+  height: 30px;
+  position: relative;
+  animation: shake 1.5s infinite;
+}
+
+.pokeball-top {
+  position: absolute;
+  width: 30px;
+  height: 15px;
+  background-color: #ee1515; /* Pokémon red */
+  border-radius: 30px 30px 0 0;
+}
+
+.pokeball-bottom {
+  position: absolute;
+  bottom: 0;
+  width: 30px;
+  height: 15px;
+  background-color: white;
+  border-radius: 0 0 30px 30px;
+}
+
+.pokeball-middle {
+  position: absolute;
+  top: 13px;
+  width: 30px;
+  height: 4px;
+  background-color: #222224;
+}
+
+.pokeball-center {
+  position: absolute;
+  top: 9px;
+  left: 9px;
+  width: 12px;
+  height: 12px;
+  background-color: white;
+  border-radius: 50%;
+  border: 3px solid #222224;
+  z-index: 2;
+}
+
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-10deg); }
+  40% { transform: rotate(10deg); }
+  60% { transform: rotate(-10deg); }
+  80% { transform: rotate(10deg); }
+  100% { transform: rotate(0deg); }
+}
+
 .error {
-  color: red;
+  color: #ee1515; /* Pokémon red */
   margin-top: 16px;
+  background-color: rgba(238, 21, 21, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.login-link {
+  margin-top: 20px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.login-link a {
+  color: #3c5aa6; /* Pokémon blue */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
 }
 </style>
