@@ -1,9 +1,25 @@
 <script setup>
-import { RouterLink, RouterView } from 'vue-router'
+import TopBar from './components/TopBar.vue';
+import account from './supabase';
+import { onMounted } from 'vue';
+import { RouterLink, RouterView } from 'vue-router';
+import { useAuthStore } from './stores/auth';
+const authStore = useAuthStore();
+
+//  
+onMounted(async () => {
+  const { data } = await account.auth.getUser()
+  if (data?.user) {
+    authStore.setUser(data.user)
+    // router.push whatever
+  }
+})
+
 </script>
 
 <template>
   <RouterView />
+  <TopBar />
 </template>
 
 <style scoped>

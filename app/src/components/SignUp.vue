@@ -56,28 +56,28 @@
 <script setup>
 
 import { ref, onMounted } from 'vue';
-import account from '@/supabase'; // Make sure this points to your Supabase client
+import { useRouter } from 'vue-router'
+import account from '@/supabase'; 
 
-// Reactive variables
 const email = ref('');
 const username = ref('');
 const password = ref('');
 const error = ref(null);
 const loading = ref(false);
+const router = useRouter()
 
-// Signup function
 const handleSignup = async () => {
   error.value = null;
-  loading.value = true;
+  loading.value = true; // clear all errors and load
 
   try {
-    // Sign up with Supabase Auth and include `username` in metadata
+    
     const { data, error: authError } = await account.auth.signUp({
       email: email.value,
-      password: password.value,
+      password: password.value, 
       options: {
         data: {
-          username: username.value // This goes to `raw_user_meta_data` in your DB
+          username: username.value // username metadata 
         }
       }
     });
@@ -92,7 +92,7 @@ const handleSignup = async () => {
     }
 
     console.log('Signup successful, user ID:', user.id);
-    // No need to manually insert into 'accounts' — the trigger handles it
+    
   } catch (err) {
     error.value = err.message;
   } finally {
@@ -105,10 +105,10 @@ onMounted(async () => {
     data: { session }
   } = await account.auth.getSession();
 
-  if (session?.user) {
-    router.push('/dashboard');
+  if (session?.user) { // if session not null/undfined, access session.user, otherwise return undefined --> safer and cleaner
+    router.push('/inventory');
   }
-});
+}); // redirect if already logged in
 
 </script>
 
