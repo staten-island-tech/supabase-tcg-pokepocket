@@ -51,6 +51,9 @@
 </template>
 
 <script>
+
+import account from '@/supabase'
+
 export default {
   data() {
     return {
@@ -69,50 +72,57 @@ export default {
   },
   methods: {
     
-  addToInventory() {
-    try {
-      // Get any existing inventory from localStorage or start fresh
-      const existingInventory = JSON.parse(localStorage.getItem('pokemonInventory')) || [];
+    async addToInventory() {
+      try {
+        const {
+          data: { user },
+          error: userError
+        } = await account.auth.getUser()
 
-      // Combine existing inventory with new cards
-      // Avoid duplicates by card id (you can customize this)
-      const newInventory = [...existingInventory];
+        if (userError) throw userError
+        if (!user) throw new Error('User not authenticated')
 
-      this.cards.forEach(card => {
-        if (!newInventory.find(c => c.id === card.id)) {
-          newInventory.push(card);
-        }
-      });
+        const userId = user.id
 
-      // Save back to localStorage
-      localStorage.setItem('pokemonInventory', JSON.stringify(newInventory));
+        const insertPayload = this.cards.map(card => ({
+          user_id: userId,
+          card_id: card.id,
+          card_data: card
+        }))
 
-      alert('Cards added to inventory!');
-    } catch (error) {
-      console.error('Error adding to inventory:', error);
-    }
-  },
+        const { error } = await account.from('user_cards').upsert(insertPayload, {
+          onConflict: ['user_id', 'card_id'] // handles duplicates based on your unique constraint
+        })
 
-  async openPack() {
-  try {
-    this.blurring = true;
-    this.isShaking = true;
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    this.isShaking = false;
+        if (error) throw error
 
-    // There are about ~14000 cards total, so 1400 pages with pageSize=10
-    const randomPage = Math.floor(Math.random() * 1400) + 1;
+        alert('Cards added to your Supabase inventory!')
+      } catch (error) {
+        console.error('Error adding to Supabase inventory:', error)
+        alert('Something went wrong adding cards to inventory.')
+      }
+    },
 
-    const response = await fetch(`https://api.pokemontcg.io/v2/cards?pageSize=10&page=${randomPage}`);
-    const data = await response.json();
-    this.cards = data.data;
-    this.cardVisibility = Array(this.cards.length).fill(false);
+      async openPack() {
+      try {
+        this.blurring = true;
+        this.isShaking = true;
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        this.isShaking = false;
 
-    this.revealCards();
-  } catch (error) {
-    console.error('Failed to fetch cards:', error);
-  }
-},
+        // There are about ~14000 cards total, so 1400 pages with pageSize=10
+        const randomPage = Math.floor(Math.random() * 1400) + 1;
+
+        const response = await fetch(`https://api.pokemontcg.io/v2/cards?pageSize=10&page=${randomPage}`);
+        const data = await response.json();
+        this.cards = data.data;
+        this.cardVisibility = Array(this.cards.length).fill(false);
+
+        this.revealCards();
+      } catch (error) {
+        console.error('Failed to fetch cards:', error);
+      }
+    },
 
     revealCards() {
       this.cards.forEach((_, index) => {
