@@ -1,11 +1,11 @@
 <template>
     <div>
-        <Login />
+        <LoginMenu />
     </div>
 </template>
 
 <script setup>
-import Login from '@/components/LogIn.vue';
+import LoginMenu from '@/components/LoginMenu.vue'
 </script>
 
 <style scoped>
