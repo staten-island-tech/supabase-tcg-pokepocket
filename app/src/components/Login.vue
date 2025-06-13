@@ -1,49 +1,48 @@
 <template>
-  <div class="signin">
-
-    <h2>Log In</h2>
+  <div class="signin-container">
+    <div class="signin">
+      <div class="pokeball-accent"></div>
+      <h2>Log In</h2>
+      
+      <form @submit.prevent="handleSignin">
+        <div class="form-group">
+          <label for="email">Gmail</label>
+          <input
+            type="email"
+            id="email"
+            v-model="email"
+            placeholder="Enter your Gmail"
+            required
+          />
+        </div>
     
-    <form @submit.prevent="handleSignin">
-      <div class="form-group">
-        <label for="email">Gmail</label>
-        <input
-          type="email"
-          id="email"
-          v-model="email"
-          placeholder="Enter your Gmail"
-          required
-        />
-      </div>
-  
-      <div class="form-group">
-        <label for="password">Password</label>
-        <input
-          type="password"
-          id="password"
-          v-model="password"
-          placeholder="Enter your password"
-          required
-        />
-      </div>
-  
-      <button type="submit" :disabled="loading">
-        {{ loading ? 'Signing In...' : 'Log In' }}
-      </button>
-  
-      <div v-if="error" class="error">
-        <p>{{ error }}</p>
-      </div>
-  
-      <p class="signup-link">
-        Don't have an account?
-        <router-link to="/">Sign Up</router-link>
-      </p>
-    </form>
-
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            v-model="password"
+            placeholder="Enter your password"
+            required
+          />
+        </div>
+    
+        <button type="submit" :disabled="loading">
+          {{ loading ? 'Signing In...' : 'Log In' }}
+        </button>
+    
+        <div v-if="error" class="error">
+          <p>{{ error }}</p>
+        </div>
+    
+        <p class="signup-link">
+          Don't have an account?
+          <router-link to="/">Sign Up</router-link>
+        </p>
+      </form>
+    </div>
   </div>
-
 </template>
-
 
 <script setup>
 import { ref } from 'vue';
@@ -64,7 +63,6 @@ const handleSignin = async () => {
   loading.value = true;
 
   try {
-
     const { data, error: authError } = await account.auth.signInWithPassword({
       email: email.value,
       password: password.value,
@@ -101,57 +99,197 @@ const handleSignin = async () => {
   } finally {
     loading.value = false;
   }
-
 };
-
 </script>
 
-
 <style scoped>
-.signin {
-  max-width: 400px;
-  margin: auto;
+/* Add top spacing to account for the topbar */
+.signin-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f5f5f5;
+  background-image: url('https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png');
   padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  background-color: #f9f9f9;
+  /* Add top padding to account for the topbar */
+  padding-top: 70px; /* Adjust this value based on your topbar height */
+}
+
+.signin {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+  background-color: #fff;
+  border: 3px solid #3c5aa6;
+  overflow: hidden;
+}
+
+.pokeball-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background-color: #ff0000;
+  z-index: 0;
+}
+
+.pokeball-accent::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 15px;
+  width: 30px;
+  height: 30px;
+  background-color: white;
+  border: 3px solid #333;
+  border-radius: 50%;
+  z-index: 1;
+}
+
+h2 {
+  text-align: center;
+  color: #3c5aa6;
+  margin-bottom: 25px;
+  font-size: 1.8rem;
+  position: relative;
+  z-index: 2;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .form-group {
-  margin-bottom: 16px;
+  margin-bottom: 20px;
+  position: relative;
+  z-index: 2;
 }
 
 label {
   display: block;
   margin-bottom: 8px;
+  color: #3c5aa6;
+  font-weight: bold;
 }
 
 input {
   width: 100%;
-  padding: 8px;
-  margin-top: 4px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  padding: 12px;
+  border: 2px solid #ffcb05;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3c5aa6;
+  box-shadow: 0 0 0 2px rgba(60, 90, 166, 0.2);
 }
 
 button {
   width: 100%;
-  padding: 10px;
-  background-color: #4caf50;
-  color: white;
+  padding: 12px;
+  background-color: #ffcb05;
+  color: #3c5aa6;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s;
+  position: relative;
+  z-index: 2;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+button:hover:not(:disabled) {
+  background-color: #e6b800;
 }
 
 button:disabled {
-  background-color: #ddd;
+  background-color: #cccccc;
   cursor: not-allowed;
+  color: #666;
 }
 
 .error {
-  color: red;
+  color: #ff0000;
   margin-top: 16px;
+  background-color: rgba(255, 0, 0, 0.1);
+  padding: 10px;
+  border-radius: 8px;
+  border-left: 4px solid #ff0000;
+}
+
+.signup-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+  position: relative;
+  z-index: 2;
+}
+
+.signup-link a {
+  color: #3c5aa6;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.signup-link a:hover {
+  text-decoration: underline;
+}
+
+/* Media queries for mobile responsiveness */
+@media (max-width: 768px) {
+  .signin {
+    max-width: 90%;
+    padding: 25px 20px;
+  }
+  
+  h2 {
+    font-size: 1.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .signin-container {
+    padding: 15px;
+    padding-top: 60px; /* Slightly reduced top padding for mobile */
+  }
+  
+  .signin {
+    padding: 20px 15px;
+    max-width: 100%;
+    border-width: 2px;
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+  }
+  
+  input {
+    padding: 10px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  .pokeball-accent {
+    height: 10px;
+  }
+  
+  .pokeball-accent::after {
+    width: 25px;
+    height: 25px;
+    top: 10px;
+    right: 10px;
+    border-width: 2px;
+  }
 }
 </style>

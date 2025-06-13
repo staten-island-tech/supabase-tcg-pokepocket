@@ -57,38 +57,37 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router'
-import account from '@/supabase'; 
+import { useRouter } from 'vue-router';
+import account from '@/supabase';
 
 const email = ref('');
 const username = ref('');
 const password = ref('');
 const error = ref(null);
 const loading = ref(false);
-const router = useRouter()
+const router = useRouter();
 
 onMounted(async () => {
   const {
     data: { session }
   } = await account.auth.getSession();
 
-  if (session?.user) { // if session not null/undfined, access session.user, otherwise return undefined --> safer and cleaner
+  if (session?.user) {
     router.push('/inventory');
   }
-}); // redirect if already logged in
+});
 
 const handleSignup = async () => {
   error.value = null;
-  loading.value = true; // clear all errors and load
+  loading.value = true;
 
   try {
-    
     const { data, error: authError } = await account.auth.signUp({
       email: email.value,
-      password: password.value, 
+      password: password.value,
       options: {
         data: {
-          username: username.value // username metadata 
+          username: username.value
         }
       }
     });
@@ -103,40 +102,46 @@ const handleSignup = async () => {
     }
 
     console.log('Signup successful, user ID:', user.id);
-    
   } catch (err) {
     error.value = err.message;
   } finally {
     loading.value = false;
   }
 };
-
 </script>
 
 <style scoped>
+/* Full-screen background container */
 .signup-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 100vh;
+  min-height: 100vh; /* full height */
+  width: 100vw;       /* full width */
+  margin: 0;
+  padding: 20px;
   background-color: #f5f5f5;
   background-image: url('https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png');
-  padding: 20px;
+  background-size: cover;
+  background-position: center;
+  box-sizing: border-box;
+  overflow-x: hidden;
 }
 
+/* Centered form with responsive max-width */
 .signup {
-  width: 100%;
-  max-width: 400px;
-  margin: 0 auto;
+  background-color: #fff;
   padding: 30px 25px;
+  border: 3px solid #3c5aa6;
   border-radius: 15px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  max-width: 400px;
+  width: 100%;
   position: relative;
-  background-color: #fff;
-  border: 3px solid #3c5aa6;
   overflow: hidden;
 }
 
+/* Pokéball top accent */
 .pokeball-accent {
   position: absolute;
   top: 0;
@@ -146,7 +151,6 @@ const handleSignup = async () => {
   background-color: #ff0000;
   z-index: 0;
 }
-
 .pokeball-accent::after {
   content: '';
   position: absolute;
@@ -160,22 +164,25 @@ const handleSignup = async () => {
   z-index: 1;
 }
 
+/* Header style */
 h2 {
+  margin: 0 0 25px;
   text-align: center;
   color: #3c5aa6;
-  margin-bottom: 25px;
   font-size: 1.8rem;
   position: relative;
   z-index: 2;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
+/* Form groups */
 .form-group {
   margin-bottom: 20px;
   position: relative;
   z-index: 2;
 }
 
+/* Labels */
 label {
   display: block;
   margin-bottom: 8px;
@@ -183,21 +190,22 @@ label {
   font-weight: bold;
 }
 
+/* Inputs */
 input {
   width: 100%;
   padding: 12px;
   border: 2px solid #ffcb05;
   border-radius: 8px;
   background-color: #f9f9f9;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
-
 input:focus {
   outline: none;
   border-color: #3c5aa6;
   box-shadow: 0 0 0 2px rgba(60, 90, 166, 0.2);
 }
 
+/* Button styling */
 button {
   width: 100%;
   padding: 12px;
@@ -205,97 +213,89 @@ button {
   color: #3c5aa6;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
   font-size: 16px;
   font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   transition: background-color 0.3s;
   position: relative;
   z-index: 2;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-
 button:hover:not(:disabled) {
   background-color: #e6b800;
 }
-
 button:disabled {
   background-color: #cccccc;
+  color: #666;
   cursor: not-allowed;
-  color: #666;
 }
 
+/* Error box */
 .error {
-  color: #ff0000;
   margin-top: 16px;
-  background-color: rgba(255, 0, 0, 0.1);
   padding: 10px;
-  border-radius: 8px;
   border-left: 4px solid #ff0000;
+  background-color: rgba(255, 0, 0, 0.1);
+  color: #ff0000;
+  border-radius: 8px;
 }
 
+/* Login link */
 .login-link {
-  text-align: center;
   margin-top: 20px;
-  color: #666;
-  position: relative;
+  text-align: center;
   z-index: 2;
+  position: relative;
 }
-
 .login-link a {
   color: #3c5aa6;
-  text-decoration: none;
   font-weight: bold;
+  text-decoration: none;
 }
-
 .login-link a:hover {
   text-decoration: underline;
 }
 
-/* Media queries for mobile responsiveness */
-@media (max-width: 768px) {
+/* Tablet screens */
+@media (min-width: 768px) {
   .signup {
-    max-width: 90%;
-    padding: 25px 20px;
-  }
-  
-  h2 {
-    font-size: 1.6rem;
+    max-width: 600px;
+    padding: 40px;
   }
 }
 
-@media (max-width: 480px) {
-  .signup-container {
-    padding: 15px;
+/* Desktop and larger */
+@media (min-width: 1200px) {
+  .signup {
+    max-width: 800px;
+    padding: 50px;
   }
-  
+}
+
+/* Mobile adjustments */
+@media (max-width: 480px) {
   .signup {
     padding: 20px 15px;
-    max-width: 100%;
     border-width: 2px;
   }
-  
   h2 {
     font-size: 1.5rem;
     margin-bottom: 20px;
   }
-  
   input {
     padding: 10px;
   }
-  
   .form-group {
     margin-bottom: 15px;
   }
-  
   .pokeball-accent {
     height: 10px;
   }
-  
   .pokeball-accent::after {
-    width: 25px;
-    height: 25px;
     top: 10px;
     right: 10px;
+    width: 25px;
+    height: 25px;
     border-width: 2px;
   }
 }

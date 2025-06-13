@@ -19,11 +19,13 @@ const routes = [
     path: '/pack-opening',
     name: 'PackOpening',
     component: PackOpening, 
+    meta: { requiresAuth: true },
   },
   {
     path: '/inventory',
     name: 'Inventory',
     component: InventoryPage,
+    meta: { requiresAuth: true }
   }
 ];
 

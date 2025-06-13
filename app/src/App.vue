@@ -23,6 +23,11 @@ onMounted(async () => {
 </template>
 
 <style scoped>
+
+.main-content {
+  padding-top: 60px; 
+}
+
 header {
   line-height: 1.5;
   max-height: 100vh;
