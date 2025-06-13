@@ -11,9 +11,17 @@ onMounted(async () => {
   const { data } = await account.auth.getUser()
   if (data?.user) {
     authStore.setUser(data.user)
-    // router.push whatever
   }
+
+  account.auth.onAuthStateChange((_event, session) => {
+    if (session?.user) {
+      authStore.setUser(session.user)
+    } else {
+      authStore.clearUser()
+    }
+  })
 })
+
 
 </script>
 
