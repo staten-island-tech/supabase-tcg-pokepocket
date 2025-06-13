@@ -7,7 +7,7 @@
 </template>
 
 <script setup>
-import Inventory from '@/components/Inventory.vue';
+import Inventory from '@/components/InventoryMenu.vue';
 </script>
 
 <style scoped>
