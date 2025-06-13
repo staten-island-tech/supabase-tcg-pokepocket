@@ -1,14 +1,14 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore }             from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 
-import SignupPage    from '@/views/SignupPage.vue'
-import LoginPage     from '@/views/LoginPage.vue'
+import SignupPage from '@/views/SignupPage.vue'
+import LoginPage from '@/views/LoginPage.vue'
 import InventoryPage from '@/views/InventoryPage.vue'
 import PackOpening   from '@/components/PackOpening.vue'
 
 const routes = [
-  { path: '/',            name: 'SignUp',      component: SignupPage },
-  { path: '/login',       name: 'Login',       component: LoginPage },
+  { path: '/', name: 'SignUp', component: SignupPage },
+  { path: '/login', name: 'Login', component: LoginPage },
   {
     path: '/pack-opening',
     name: 'PackOpening',
@@ -29,7 +29,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()             // ← no pinia here!
+  const authStore = useAuthStore()
   const isAuthenticated = !!authStore.user
 
   if (to.meta.requiresAuth && !isAuthenticated) {
